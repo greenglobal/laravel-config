@@ -11,7 +11,6 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        dd(11111111111);
     }
 
     /**
