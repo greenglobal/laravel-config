@@ -4,34 +4,31 @@ namespace GGPHP\Config\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use GGPHP\Config\Models\LaravelConfig;
 
 class ConfigController extends Controller
 {
-    public function index()
+    public function updateConfigs(Request $request)
     {
-    }
+        $data = Arr::except($request->all(), ['_method', '_token']);
 
-    public function create()
-    {
-    }
+        foreach ( $data as $code => $value) {
+            $infoConfig = app('GGPHP\Config\Helpers\Config')->getConfigOf($code);
 
-    public function store(Request $request)
-    {
-    }
+            if ($infoConfig) {
+                $infoConfig->update([
+                    'code' => $code,
+                    'value' => $value
+                ]);
+            } else {
+                LaravelConfig::create([
+                    'code' => $code,
+                    'value' => $value
+                ]);
+            }
+        }
 
-    public function show($id)
-    {
-    }
-
-    public function edit($id)
-    {
-    }
-
-    public function update(Request $request, $id)
-    {
-    }
-
-    public function destroy($id)
-    {
+        return redirect()->back();
     }
 }

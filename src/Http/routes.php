@@ -1,3 +1,4 @@
 <?php
 
-Route::resource('configs', GGPHP\Config\Http\Controllers\ConfigController::class);
+Route::put('config/updates', 'GGPHP\Config\Http\Controllers\ConfigController@updateConfigs')
+    ->name('config-updates');
