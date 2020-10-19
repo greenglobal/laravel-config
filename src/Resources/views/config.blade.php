@@ -1,5 +1,5 @@
 <div>
-<form method="POST" action="{{ route('config-updates') }}">
+    <form method="POST" action="{{ route('config-updates') }}">
         @csrf()
         <input name="_method" type="hidden" value="PUT">
         @foreach ($fields as $field)
