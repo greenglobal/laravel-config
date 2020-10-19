@@ -15,7 +15,7 @@ class CreateLaravelConfigTable extends Migration
         if (env('STORE_CONFIG', 'database') === 'database') {
             Schema::create('laravel_config', function (Blueprint $table) {
                 $table->id();
-                $table->string('code');
+                $table->string('code')->unique();
                 $table->string('value');
                 $table->string('dèault')->nullable();
                 $table->timestamps();
