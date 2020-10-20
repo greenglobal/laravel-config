@@ -43,6 +43,6 @@ class ConfigController extends Controller
             }
         }
 
-        return redirect()->back();
+        return;
     }
 }

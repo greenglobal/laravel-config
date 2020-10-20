@@ -7,6 +7,7 @@
                 @if ($field['type'] === 'text')
                     <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
                     <input type="{{ $field['type'] }}" name="{{ $field['code'] }}" value="{{ isset($field['default']) ? $field['default'] : '' }}"/>
+                    <p style="color:red">{{ $errors->first($field['code']) }}</p>
                 @elseif ($field['type'] === 'select')
                     <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
                     <select name="{{ $field['code'] }}">
