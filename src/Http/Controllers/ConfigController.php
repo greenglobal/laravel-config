@@ -14,11 +14,15 @@ class ConfigController extends Controller
     {
         $data = Arr::except($request->all(), ['_method', '_token']);
         $configs = config('laravelconfig.fields');
-        $rules = [];
+        $rules = $booleans = [];
 
         foreach ($configs as $config) {
             if (isset($config['validation'])) {
                 $rules[$config['code']] = $config['validation'];
+            }
+            
+            if (isset($config['type']) && $config['type'] === 'boolean') {
+                $booleans[] = $config['code'];
             }
         }
 
@@ -28,17 +32,28 @@ class ConfigController extends Controller
             return view('ggphp-config::config')->with('errors', $validator->errors());
         }
 
+        // Ìf not checked input boolean is false.
+        foreach ($booleans as $value) {
+            if (! in_array( $value, array_keys($data))) {
+                $data[$value] = false;
+            }
+        }
+
         foreach ( $data as $code => $value) {
-            $infoConfig = app('GGPHP\Config\Helpers\Config')->getConfigOf($code);
+            $configHelper = app('GGPHP\Config\Helpers\Config');
+            $infoConfig = $configHelper->getConfigOf($code);
+
             if ($infoConfig) {
                 $infoConfig->update([
                     'code' => $code,
-                    'value' => $value
+                    'value' => $value,
+                    'default' => $configHelper->getValueDefault($code)
                 ]);
             } else {
                 LaravelConfig::create([
                     'code' => $code,
-                    'value' => $value
+                    'value' => $value,
+                    'default' => $configHelper->getValueDefault($code)
                 ]);
             }
         }

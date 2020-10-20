@@ -14,4 +14,19 @@ class Config {
 
         return false;
     }
+
+    public function getValueDefault($code)
+    {
+        $fields = config('laravelconfig.fields');
+        $default = null;
+
+        foreach ($fields as $field) {
+            if ($field['code'] === $code && isset($field['default'])) {
+                $default = $field['default'];
+                break;
+            }
+        }
+
+        return $default;
+    }
 }

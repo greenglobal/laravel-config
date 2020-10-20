@@ -17,7 +17,7 @@ class CreateLaravelConfigTable extends Migration
                 $table->id();
                 $table->string('code')->unique();
                 $table->string('value');
-                $table->string('dèault')->nullable();
+                $table->string('default')->nullable();
                 $table->timestamps();
             });
         }
