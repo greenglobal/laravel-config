@@ -26,7 +26,7 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // $this->mergeConfigFrom( __DIR__.'/../../config/test.php', 'laravelconfig.fields');
+        $this->mergeConfigFrom( __DIR__.'/../../config/test.php', 'laravelconfig.fields');
     }
 
     protected function composeView()
