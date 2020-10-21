@@ -14,4 +14,11 @@ class Config {
 
         return false;
     }
+
+    public function getThrottle($nameRoute)
+    {
+        $throttle = $this->getConfigOf($nameRoute);
+
+        return ! empty($throttle) ? json_decode($throttle->value, true) : [];
+    }
 }
