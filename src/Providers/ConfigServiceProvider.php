@@ -33,7 +33,9 @@ class ConfigServiceProvider extends ServiceProvider
     {
         view()->composer(['ggphp-config::config'], function ($view) {
             $fields = config('laravelconfig.fields');
-            $view->with('fields', $fields);
+            $configs = app('GGPHP\Config\Helpers\Config');
+
+            $view->with(['fields' => $fields, 'configs' => $configs]);
         });
     }
 }
