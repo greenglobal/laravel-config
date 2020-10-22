@@ -12,7 +12,7 @@ class ConfigServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../config/config.php' => config_path('ggphpconfig.php'),
+            __DIR__.'/../../config/config.php' => config_path('laravelconfig.php'),
         ], 'config');
 
         $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
@@ -26,7 +26,6 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom( __DIR__.'/../../config/test.php', 'laravelconfig.fields');
     }
 
     protected function composeView()
