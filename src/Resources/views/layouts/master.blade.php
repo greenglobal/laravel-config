@@ -66,6 +66,9 @@
             .row {
                 margin-bottom: 18px;
             }
+            .set-default {
+                margin-bottom: 10px;
+            }
         </style>
     </head>
 
