@@ -17,9 +17,9 @@ composer require ggphp/configuration
 
 ## Usage
 
-``` php
-// Usage description here
-```
+### Dynamic api rate limiting
+- Add `throttle` to `middleware` at `prefix => api`.
+- Go to `https://<your-site>/configuration/throttles`.
 
 ### Testing
 

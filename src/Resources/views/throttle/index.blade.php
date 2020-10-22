@@ -6,6 +6,10 @@
         <h1 class="title-page">
             API Throttles
         </h1>
+
+        <div class="set-default">
+            <a href="{{ route('api.throttle.edit', $throttleDefaultId) }}">Set Default</a>
+        </div>
     </div>
 
     <div class="content-page">
