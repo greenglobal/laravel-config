@@ -87,6 +87,7 @@
                 margin-bottom: 18px;
             }
 
+            // Toggle switch
             .switch {
                 position: relative;
                 display: inline-block;
@@ -147,6 +148,9 @@
 
             .slider.round:before {
                 border-radius: 50%;
+            }
+            .set-default {
+                margin-bottom: 10px;
             }
         </style>
     </head>

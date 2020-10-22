@@ -70,7 +70,21 @@ class ThrottleController extends Controller
             }
         }
 
-        return view('ggphp-config::throttle.index', compact('throttles'));
+        $throttleDefault = app('GGPHP\Config\Helpers\Config')->getConfigOf('throttle_default');
+
+        if (empty($throttleDefault)) {
+            $throttleDefault = LaravelConfig::create([
+                'code' => 'throttle_default',
+                'value' => json_encode([
+                    'max_attempts' => LaravelConfig::MAX_ATTEMPTS_DEFAULT,
+                    'decay_minutes' => LaravelConfig::DECAY_MINUTES_DEFAULT,
+                ]),
+            ]);
+        }
+
+        $throttleDefaultId = $throttleDefault->id ?? '';
+
+        return view('ggphp-config::throttle.index', compact('throttles', 'throttleDefaultId'));
     }
 
     /**
@@ -115,6 +129,45 @@ class ThrottleController extends Controller
             ]);
 
             $throttle->save();
+        }
+
+        $throttleDefault = app('GGPHP\Config\Helpers\Config')->getConfigOf('throttle_default');
+
+        if (! empty($throttleDefault) && $throttleDefault->id == $data['id']) {
+            $routeCollection = Route::getRoutes();
+
+            foreach ($routeCollection as $route) {
+                $actions = $route->getAction();
+
+                if (! empty($actions['middleware']) &&
+                    ! empty(array_filter($actions['middleware'], function($value) {
+                        return (strpos($value, 'throttle:') !== false) ?? false;
+                    }))
+                )
+                    continue;
+
+                if (! empty($actions['prefix']) && $actions['prefix'] == 'api') {
+                    $routeName = $route->getName();
+                    $routePath = $route->uri();
+
+                    if (empty($routeName) && ! empty($routePath)) {
+                        $routeName = str_replace(['-', '/'], '_', $routePath);
+                    } elseif (empty($routeName)) {
+                        continue;
+                    }
+
+                    $throttle = app('GGPHP\Config\Helpers\Config')->getConfigOf($routeName);
+
+                    if (! empty($throttle) && ! empty($throttleDefault)) {
+                        $throttle->value = json_encode([
+                            'max_attempts' => json_decode($throttleDefault->value, true)['max_attempts'] ?? LaravelConfig::MAX_ATTEMPTS_DEFAULT,
+                            'decay_minutes' => json_decode($throttleDefault->value, true)['decay_minutes'] ?? LaravelConfig::DECAY_MINUTES_DEFAULT,
+                        ]);
+
+                        $throttle->save();
+                    }
+                }
+            }
         }
 
         return redirect()->route('api.throttle.index');
