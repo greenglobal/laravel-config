@@ -35,8 +35,11 @@ class ThrottleController extends Controller
                 $routeName = $route->getName();
                 $routePath = $route->uri();
 
-                if (empty($routeName))
+                if (empty($routeName) && ! empty($routePath)) {
+                    $routeName = str_replace(['-', '/'], '_', $routePath);
+                } elseif (empty($routeName)) {
                     continue;
+                }
 
                 $routeInfo = app('GGPHP\Config\Helpers\Config')->getConfigOf($routeName);
 
@@ -96,7 +99,7 @@ class ThrottleController extends Controller
     {
         $validator = Validator::make(request()->all(), [
             'id' => 'required|string|exists:laravel_config,id',
-            'max_attempts' => 'required|integer',
+            'max_attempts' => 'required|string|max:255',
             'decay_minutes' => 'required|integer',
         ]);
 

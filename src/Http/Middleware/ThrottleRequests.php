@@ -21,29 +21,15 @@ class ThrottleRequests extends CoreThrottleRequests
      */
     public function handle($request, Closure $next, $maxAttempts = 60, $decayMinutes = 1, $prefix = '')
     {
-        if (! empty($routeName = $request->route()->getName())) {
-            $throttle = app('GGPHP\Config\Helpers\Config')->getThrottle($routeName);
+        $routeName = ! empty($routeName = $request->route()->getName())
+            ? $routeName : str_replace(['-', '/'], '_', $request->route()->uri());
+        $throttle = app('GGPHP\Config\Helpers\Config')->getThrottle($routeName);
+
+        if (! empty($throttle)) {
             $maxAttempts = (int) ($throttle['max_attempts'] ?? $maxAttempts);
             $decayMinutes = (int) ($throttle['decay_minutes'] ?? $decayMinutes);
         }
 
-        if (is_string($maxAttempts)
-            && func_num_args() === 3
-            && ! is_null($limiter = $this->limiter->limiter($maxAttempts))) {
-            return $this->handleRequestUsingNamedLimiter($request, $next, $maxAttempts, $limiter);
-        }
-
-        return $this->handleRequest(
-            $request,
-            $next,
-            [
-                (object) [
-                    'key' => $prefix.$this->resolveRequestSignature($request),
-                    'maxAttempts' => $this->resolveMaxAttempts($request, $maxAttempts),
-                    'decayMinutes' => $decayMinutes,
-                    'responseCallback' => null,
-                ],
-            ]
-        );
+        return parent::handle($request, $next, $maxAttempts, $decayMinutes, $prefix);
     }
 }
