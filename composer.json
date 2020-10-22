@@ -1,11 +1,11 @@
 {
-    "name": "ggphp/configuration",
+    "name": "ggphp/config",
     "description": "laravel config",
     "keywords": [
         "ggphp",
         "configuration"
     ],
-    "homepage": "https://github.com/ggphp/configuration",
+    "homepage": "https://github.com/greenglobal/laravel-config",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "GGPHP\\Configuration\\": "src"
+            "GGPHP\\Config\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "GGPHP\\Configuration\\Tests\\": "tests"
+            "GGPHP\\Config\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -44,7 +44,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "GGPHP\\Configuration\\Providers\\ConfigServiceProvider"
+                "GGPHP\\Config\\Providers\\ConfigServiceProvider"
             ],
             "aliases": {}
         }
