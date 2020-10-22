@@ -4,7 +4,6 @@ namespace GGPHP\Config\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use GGPHP\Config\Models\LaravelConfig;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Route;
 
@@ -41,7 +40,7 @@ class ThrottleController extends Controller
                     continue;
                 }
 
-                $routeInfo = app('GGPHP\Config\Helpers\Config')->getConfigOf($routeName);
+                $routeInfo = app('GGPHP\Config\Helpers\Config')->getConfigByCode($routeName);
 
                 if (! empty($routeInfo)) {
                     $throttles[] = [
@@ -97,7 +96,6 @@ class ThrottleController extends Controller
     public function edit($id)
     {
         $route = LaravelConfig::findOrFail($id);
-
         $throttle = json_decode($route['value'], true);
 
         return view('ggphp-config::throttle.edit', compact('id', 'throttle'));

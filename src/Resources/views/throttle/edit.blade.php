@@ -21,7 +21,7 @@
                 </div>
 
                 <div>
-                  <input type="text" id="maxAttempts" name="max_attempts" value="{{ $throttle['max_attempts'] ?? '' }}">
+                  <input type="text" id="maxAttempts" name="max_attempts" value="{{ $throttle['max_attempts'] ?? '' }}" class="input-text">
 
                   @if($errors->has('max_attempts'))
                       <span class="error">{{ $errors->first('max_attempts') }}</span>
@@ -35,7 +35,7 @@
                 </div>
 
                 <div>
-                    <input type="text" id="decayMinutes" name="decay_minutes" value="{{ $throttle['decay_minutes'] ?? '' }}">
+                    <input type="text" id="decayMinutes" name="decay_minutes" value="{{ $throttle['decay_minutes'] ?? '' }}" class="input-text">
 
                     @if($errors->has('decay_minutes'))
                         <span class="error">{{ $errors->first('decay_minutes') }}</span>
@@ -44,7 +44,7 @@
             </div>
 
             <div class="row">
-                <input type="submit" value="Save">
+                <input type="submit" value="Save" class="input-submit">
             </div>
 
         </form>

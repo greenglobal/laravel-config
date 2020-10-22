@@ -6,7 +6,7 @@ use GGPHP\Config\Models\LaravelConfig;
 
 class Config {
     // Get info config by code
-    public function getConfigOf($code)
+    public function getConfigByCode($code)
     {
         if ($config = LaravelConfig::where('code', $code)->first()) {
             return $config;
@@ -32,7 +32,7 @@ class Config {
 
     public function getThrottle($routeName)
     {
-        $throttle = $this->getConfigOf($routeName);
+        $throttle = $this->getConfigByCode($routeName);
 
         return ! empty($throttle) ? json_decode($throttle->value, true) : [];
     }

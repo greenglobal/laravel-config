@@ -41,7 +41,7 @@ class ConfigController extends Controller
 
         foreach ( $data as $code => $value) {
             $configHelper = app('GGPHP\Config\Helpers\Config');
-            $infoConfig = $configHelper->getConfigOf($code);
+            $infoConfig = $configHelper->getConfigByCode($code);
 
             if ($infoConfig) {
                 $infoConfig->update([
