@@ -14,11 +14,12 @@
                         <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
                         <input type="{{ $field['type'] }}"
                             name="{{ $field['code'] }}"
-                            value="{{ $value ? $value : (isset($field['default']) ? $field['default'] : '') }}"/>
+                            value="{{ $value ? $value : (isset($field['default']) ? $field['default'] : '') }}"
+                            id="{{ $field['code'] }}"/>
                         <p style="color:red">{{ $errors->first($field['code']) }}</p>
                     @elseif ($field['type'] === 'select')
                         <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
-                        <select name="{{ $field['code'] }}">
+                        <select name="{{ $field['code'] }}" id="{{ $field['code'] }}">
                             <option value=""></option>
                             @if (isset($field['options']))
                                 @php
@@ -40,16 +41,17 @@
                         <label class="switch">
                             {{ $field['name'] }}
                         <input type="checkbox"
-                            value="{{ $field['value'] }}"
+                            value="{{ isset($field['value']) ? $field['value'] : '' }}"
                             name="{{ $field['code'] }}"
-                            {{ $field['value'] == $checked ? 'checked' : ''}}>
+                            {{ (isset($field['value']) && $field['value'] == $checked) ? 'checked' : ''}}
+                            id="{{ $field['code'] }}">
                             <span class="slider round"></span>
                         </label>
                     @endif
                 </div>
             @endforeach
             <button type="submit">Save</button>
-            <button type="reset">Reset</button>
+            <button type="button" onclick="resetDefault();">Reset to default</button>
         </form>
     @else
     <div>
@@ -57,3 +59,19 @@
     </div>
     @endif
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function resetDefault() {
+        $.ajax({
+            type:'GET',
+            url:'/config/reset',
+            success:function(response) {
+                response.data.forEach(value => {
+                    $("#" + value.code).val(value.default);
+                });
+            }
+        });
+    }
+</script>
+
