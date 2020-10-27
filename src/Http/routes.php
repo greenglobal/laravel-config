@@ -5,7 +5,7 @@ Route::group(['middleware' => ['web']], function () {
         // Configuration Routes
         Route::prefix('configuration')->group(function () {
             Route::put('updates', 'ConfigController@updateConfigs')->name('config-updates');
-            Route::get('reset', 'GGPHP\Config\Http\Controllers\ConfigController@reset')->name('config-reset');
+            Route::get('reset', 'ConfigController@reset')->name('config-reset');
             
             // Throttle Routes
             Route::get('throttles', 'ThrottleController@index')->name('api.throttle.index');

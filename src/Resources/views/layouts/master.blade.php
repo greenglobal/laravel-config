@@ -87,7 +87,7 @@
                 margin-bottom: 18px;
             }
 
-            // Toggle switch
+            /* Toggle switch */
             .switch {
                 position: relative;
                 display: inline-block;

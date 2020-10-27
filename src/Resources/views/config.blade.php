@@ -13,7 +13,7 @@
                 @endphp
 
                 <div class="row">
-                    @if ($field['type'] === 'text' || $field['type'] === 'number')
+                    @if ($field['type'] == 'text' || $field['type'] == 'number')
                         <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
                         <input type="{{ $field['type'] }}"
                             name="{{ $field['code'] }}"
@@ -21,7 +21,7 @@
                             id="{{ $field['code'] }}"
                             class="input-text"/>
                         <p class="error">{{ $errors->first($field['code']) }}</p>
-                    @elseif ($field['type'] === 'select')
+                    @elseif ($field['type'] == 'select')
                         <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
                         <select name="{{ $field['code'] }}" id="{{ $field['code'] }}" class="select">
                             <option value=""></option>
@@ -37,11 +37,11 @@
                                 @endforeach
                             @endif
                         </select>
-                    @elseif ($field['type'] === 'boolean')
+                    @elseif ($field['type'] == 'boolean')
                         @php
                             $checked = $value ? $value : (isset($field['default']) ? $field['default'] : '')
                         @endphp
-                        <P class="label">{{ $field['name'] }}</P>
+                        <P class="label">{{ $field['title'] }}</P>
                         <label class="switch">
                            <span>
                                 <input type="checkbox"
@@ -62,9 +62,9 @@
             </div>
         </form>
     @else
-    <div>
-        <p>Chưa có field nào được thiết lập</p>
-    </div>
+        <div>
+            <p>Chưa có field nào được thiết lập</p>
+        </div>
     @endif
 </div>
 

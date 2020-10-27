@@ -21,7 +21,7 @@ class ConfigController extends Controller
                 $rules[$config['code']] = $config['validation'];
             }
 
-            if (isset($config['type']) && $config['type'] === 'boolean') {
+            if (isset($config['type']) && $config['type'] == 'boolean') {
                 $booleans[] = $config['code'];
             }
         }
@@ -40,9 +40,12 @@ class ConfigController extends Controller
         }
 
         foreach ( $data as $code => $value) {
+            if (is_null($value))
+                $value = '';
+
             $configHelper = app('GGPHP\Config\Helpers\Config');
             $infoConfig = $configHelper->getConfigByCode($code);
-
+            
             if ($infoConfig) {
                 $infoConfig->update([
                     'code' => $code,
