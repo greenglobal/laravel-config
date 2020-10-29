@@ -1,6 +1,6 @@
 <?php
 
-    use GGPHP\Config\Models\LaravelConfig;
+    use GGPHP\Config\Models\GGConfig;
 
     /**
      * This function use to get config info by code
@@ -11,7 +11,7 @@
     if (! function_exists('getConfigByCode')) {
         function getConfigByCode($code)
         {
-            if ($config = LaravelConfig::where('code', $code)->first())
+            if ($config = GGConfig::where('code', $code)->first())
                 return $config;
 
             return false;
@@ -27,7 +27,7 @@
     if (! function_exists('getDefaultValue')) {
         function getDefaultValue($code)
         {
-            $fields = config('laravelconfig.fields');
+            $fields = config('ggconfig.fields');
             $default = null;
 
             foreach ($fields as $field) {

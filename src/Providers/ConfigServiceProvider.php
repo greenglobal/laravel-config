@@ -14,19 +14,21 @@ class ConfigServiceProvider extends ServiceProvider
         include __DIR__ . '/../Helpers/Config.php';
 
         $this->publishes([
-            __DIR__.'/../../config/config.php' => config_path('laravelconfig.php'),
+            __DIR__ . '/../../config/system.php' => config_path('ggconfig.php'),
         ], 'config');
 
-        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
+        if (env('STORE_DB', 'database') == 'database')
+            $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'ggphp-config');
-        $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
+        $this->loadRoutesFrom(__DIR__. ' /../Http/routes.php');
         $this->composeView();
     }
 
     protected function composeView()
     {
         view()->composer(['ggphp-config::config'], function ($view) {
-            $fields = config('laravelconfig.fields');
+            $fields = config('ggconfig.fields');
 
             $view->with(['fields' => $fields]);
         });

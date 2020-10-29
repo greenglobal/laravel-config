@@ -4,9 +4,9 @@ namespace GGPHP\Config\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LaravelConfig extends Model
+class GGConfig extends Model
 {
-    protected $table = 'laravel_config';
+    protected $table = 'gg_config';
     protected $fillable = ['code', 'value', 'default'];
 
     // Define API throttle

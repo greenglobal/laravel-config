@@ -4,7 +4,7 @@ namespace GGPHP\Config\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
-use GGPHP\Config\Models\LaravelConfig;
+use GGPHP\Config\Models\GGConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,7 +13,7 @@ class ConfigController extends Controller
     public function updateConfigs(Request $request)
     {
         $data = Arr::except($request->all(), ['_method', '_token']);
-        $configs = config('laravelconfig.fields');
+        $configs = config('ggconfig.fields');
         $rules = $booleans = [];
 
         foreach ($configs as $config) {
@@ -49,7 +49,7 @@ class ConfigController extends Controller
                     'default' => getDefaultValue($code)
                 ]);
             } else {
-                LaravelConfig::create([
+                GGConfig::create([
                     'code' => $code,
                     'value' => $value,
                     'default' => getDefaultValue($code)
@@ -62,7 +62,7 @@ class ConfigController extends Controller
 
     public function reset()
     {
-        if ($configs = LaravelConfig::get(['code', 'default'])) {
+        if ($configs = GGConfig::get(['code', 'default'])) {
             return response()->json(['data' => $configs], 200);
         }
 
