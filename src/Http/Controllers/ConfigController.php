@@ -21,7 +21,7 @@ class ConfigController extends Controller
                 $rules[$config['code']] = $config['validation'];
             }
 
-            if (isset($config['type']) && $config['type'] === 'boolean') {
+            if (isset($config['type']) && $config['type'] == 'boolean') {
                 $booleans[] = $config['code'];
             }
         }
