@@ -40,7 +40,7 @@ class ThrottleController extends Controller
                     continue;
                 }
 
-                $routeInfo = app('GGPHP\Config\Helpers\Config')->getConfigByCode($routeName);
+                $routeInfo = getConfigByCode($routeName);
 
                 if (! empty($routeInfo)) {
                     $throttles[] = [
@@ -70,7 +70,7 @@ class ThrottleController extends Controller
             }
         }
 
-        $throttleDefault = app('GGPHP\Config\Helpers\Config')->getConfigOf('throttle_default');
+        $throttleDefault = getConfigByCode('throttle_default');
 
         if (empty($throttleDefault)) {
             $throttleDefault = LaravelConfig::create([
@@ -131,7 +131,7 @@ class ThrottleController extends Controller
             $throttle->save();
         }
 
-        $throttleDefault = app('GGPHP\Config\Helpers\Config')->getConfigOf('throttle_default');
+        $throttleDefault = getConfigByCode('throttle_default');
 
         if (! empty($throttleDefault) && $throttleDefault->id == $data['id']) {
             $routeCollection = Route::getRoutes();
@@ -156,7 +156,7 @@ class ThrottleController extends Controller
                         continue;
                     }
 
-                    $throttle = app('GGPHP\Config\Helpers\Config')->getConfigOf($routeName);
+                    $throttle = getConfigByCode($routeName);
 
                     if (! empty($throttle) && ! empty($throttleDefault)) {
                         $throttle->value = json_encode([

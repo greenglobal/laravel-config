@@ -23,7 +23,7 @@ class ThrottleRequests extends CoreThrottleRequests
     {
         $routeName = ! empty($routeName = $request->route()->getName())
             ? $routeName : str_replace(['-', '/'], '_', $request->route()->uri());
-        $throttle = app('GGPHP\Config\Helpers\Config')->getThrottle($routeName);
+        $throttle = getThrottle($routeName);
 
         if (! empty($throttle)) {
             $maxAttempts = (int) ($throttle['max_attempts'] ?? $maxAttempts);

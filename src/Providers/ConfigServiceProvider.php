@@ -11,6 +11,8 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        include __DIR__ . '/../Helpers/Config.php';
+
         $this->publishes([
             __DIR__.'/../../config/config.php' => config_path('laravelconfig.php'),
         ], 'config');
@@ -21,20 +23,12 @@ class ConfigServiceProvider extends ServiceProvider
         $this->composeView();
     }
 
-    /**
-     * Register the application services.
-     */
-    public function register()
-    {
-    }
-
     protected function composeView()
     {
         view()->composer(['ggphp-config::config'], function ($view) {
             $fields = config('laravelconfig.fields');
-            $configs = app('GGPHP\Config\Helpers\Config');
 
-            $view->with(['fields' => $fields, 'configs' => $configs]);
+            $view->with(['fields' => $fields]);
         });
     }
 }

@@ -1,39 +1,59 @@
 <?php
 
-namespace GGPHP\Config\Helpers;
+    use GGPHP\Config\Models\LaravelConfig;
 
-use GGPHP\Config\Models\LaravelConfig;
+    /**
+     * This function use to get config info by code
+     *
+     * @param  code field  $code
+     * @return object
+     */
+    if (! function_exists('getConfigByCode')) {
+        function getConfigByCode($code)
+        {
+            if ($config = LaravelConfig::where('code', $code)->first())
+                return $config;
 
-class Config {
-    // Get info config by code
-    public function getConfigByCode($code)
-    {
-        if ($config = LaravelConfig::where('code', $code)->first()) {
-            return $config;
+            return false;
         }
-
-        return false;
     }
 
-    public function getValueDefault($code)
-    {
-        $fields = config('laravelconfig.fields');
-        $default = null;
+    /**
+     * This function use to get default value
+     *
+     * @param  code field  $code
+     * @return object
+     */
+    if (! function_exists('getDefaultValue')) {
+        function getDefaultValue($code)
+        {
+            $fields = config('laravelconfig.fields');
+            $default = null;
 
-        foreach ($fields as $field) {
-            if ($field['code'] === $code && isset($field['default'])) {
-                $default = $field['default'];
-                break;
+            foreach ($fields as $field) {
+                if ($field['code'] === $code && isset($field['default'])) {
+                    $default = $field['default'];
+
+                    break;
+                }
             }
+
+            return $default;
         }
-
-        return $default;
     }
 
-    public function getThrottle($routeName)
-    {
-        $throttle = $this->getConfigByCode($routeName);
+    /**
+     * This function use to get throttle info
+     *
+     * @param  the name of the route  $routeName
+     * @return object
+     */
+    if (! function_exists('getThrottle')) {
+        function getThrottle($routeName)
+        {
+            $throttle = $this->getConfigByCode($routeName);
 
-        return ! empty($throttle) ? json_decode($throttle->value, true) : [];
+            return ! empty($throttle) ? json_decode($throttle->value, true) : [];
+        }
     }
-}
+?>

@@ -28,7 +28,7 @@ class ConfigController extends Controller
 
         $validator = Validator::make($data, $rules);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return view('ggphp-config::config')->with('errors', $validator->errors());
         }
 
@@ -39,24 +39,20 @@ class ConfigController extends Controller
             }
         }
 
-        foreach ( $data as $code => $value) {
-            if (is_null($value))
-                $value = '';
+        foreach ($data as $code => $value) {
+            $configInfo = getConfigByCode($code);
 
-            $configHelper = app('GGPHP\Config\Helpers\Config');
-            $infoConfig = $configHelper->getConfigByCode($code);
-            
-            if ($infoConfig) {
-                $infoConfig->update([
+            if ($configInfo) {
+                $configInfo->update([
                     'code' => $code,
                     'value' => $value,
-                    'default' => $configHelper->getValueDefault($code)
+                    'default' => getDefaultValue($code)
                 ]);
             } else {
                 LaravelConfig::create([
                     'code' => $code,
                     'value' => $value,
-                    'default' => $configHelper->getValueDefault($code)
+                    'default' => getDefaultValue($code)
                 ]);
             }
         }
