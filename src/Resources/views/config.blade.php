@@ -8,11 +8,12 @@
             <input name="_method" type="hidden" value="PUT">
             @foreach ($fields as $field)
                 @php
-                    $config = $configs->getConfigByCode($field['code']);
+                    $config = getConfigByCode($field['code']);
                     $value = $config ? $config->value : null;
                 @endphp
 
                 <div class="row">
+
                     @if ($field['type'] === 'text' || $field['type'] === 'number')
                         <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
                         <input type="{{ $field['type'] }}"
@@ -54,6 +55,7 @@
                            </span>
                         </label>
                     @endif
+
                 </div>
             @endforeach
             <div class="row">
@@ -75,7 +77,7 @@
     function resetDefault() {
         $.ajax({
             type:'GET',
-            url:'/config/reset',
+            url:'/configuration/reset',
             success:function(response) {
                 response.data.forEach(value => {
                     $("#" + value.code).val(value.default);
@@ -84,4 +86,3 @@
         });
     }
 </script>
-

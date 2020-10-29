@@ -1,6 +1,12 @@
 <?php
 
 return [
-    'fields' => [],
+    'fields' => [
+        [
+            'code' => 'name',
+            'default' => 'hung',
+            'type' => 'text'
+        ]
+    ],
     'roles' => []
 ];
