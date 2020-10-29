@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLaravelConfigTable extends Migration
+class CreateGGConfigTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class CreateLaravelConfigTable extends Migration
      */
     public function up()
     {
-        if (env('STORE_CONFIG', 'database') === 'database') {
-            Schema::create('laravel_config', function (Blueprint $table) {
+        if (env('STORE_DB', 'database') == 'database') {
+            Schema::create('gg_config', function (Blueprint $table) {
                 $table->id();
                 $table->string('code')->unique();
                 $table->string('value');
@@ -29,6 +29,6 @@ class CreateLaravelConfigTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('laravel_config');
+        Schema::dropIfExists('gg_config');
     }
 }

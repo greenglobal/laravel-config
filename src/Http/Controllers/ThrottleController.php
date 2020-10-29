@@ -3,7 +3,7 @@
 namespace GGPHP\Config\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use GGPHP\Config\Models\LaravelConfig;
+use GGPHP\Config\Models\GGConfig;
 use Illuminate\Support\Facades\Validator;
 use Route;
 
@@ -50,11 +50,11 @@ class ThrottleController extends Controller
                         'data' => json_decode($routeInfo['value'], true)
                     ];
                 } else {
-                    $result = LaravelConfig::create([
+                    $result = GGConfig::create([
                         'code' => $routeName,
                         'value' => json_encode([
-                            'max_attempts' => LaravelConfig::MAX_ATTEMPTS_DEFAULT,
-                            'decay_minutes' => LaravelConfig::DECAY_MINUTES_DEFAULT,
+                            'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
+                            'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
                         ]),
                     ]);
 
@@ -73,11 +73,11 @@ class ThrottleController extends Controller
         $throttleDefault = getConfigByCode('throttle_default');
 
         if (empty($throttleDefault)) {
-            $throttleDefault = LaravelConfig::create([
+            $throttleDefault = GGConfig::create([
                 'code' => 'throttle_default',
                 'value' => json_encode([
-                    'max_attempts' => LaravelConfig::MAX_ATTEMPTS_DEFAULT,
-                    'decay_minutes' => LaravelConfig::DECAY_MINUTES_DEFAULT,
+                    'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
+                    'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
                 ]),
             ]);
         }
@@ -95,7 +95,7 @@ class ThrottleController extends Controller
      */
     public function edit($id)
     {
-        $route = LaravelConfig::findOrFail($id);
+        $route = GGConfig::findOrFail($id);
         $throttle = json_decode($route['value'], true);
 
         return view('ggphp-config::throttle.edit', compact('id', 'throttle'));
@@ -120,7 +120,7 @@ class ThrottleController extends Controller
 
         $data = request()->only(['id', 'max_attempts', 'decay_minutes']);
 
-        $throttle = LaravelConfig::findOrFail($data['id']);
+        $throttle = GGConfig::findOrFail($data['id']);
 
         if (! empty($throttle)) {
             $throttle->value = json_encode([
@@ -160,8 +160,8 @@ class ThrottleController extends Controller
 
                     if (! empty($throttle) && ! empty($throttleDefault)) {
                         $throttle->value = json_encode([
-                            'max_attempts' => json_decode($throttleDefault->value, true)['max_attempts'] ?? LaravelConfig::MAX_ATTEMPTS_DEFAULT,
-                            'decay_minutes' => json_decode($throttleDefault->value, true)['decay_minutes'] ?? LaravelConfig::DECAY_MINUTES_DEFAULT,
+                            'max_attempts' => json_decode($throttleDefault->value, true)['max_attempts'] ?? GGConfig::MAX_ATTEMPTS_DEFAULT,
+                            'decay_minutes' => json_decode($throttleDefault->value, true)['decay_minutes'] ?? GGConfig::DECAY_MINUTES_DEFAULT,
                         ]);
 
                         $throttle->save();
