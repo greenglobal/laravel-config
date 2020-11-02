@@ -14,7 +14,6 @@
             body {
                 font-family: Arial, Helvetica, sans-serif;
             }
-
             * {
                 box-sizing: border-box;
             }
@@ -44,6 +43,9 @@
                 margin-top: 6px;
                 margin-bottom: 16px;
                 resize: vertical;
+                border-color: #ccc;
+                background-color: #fff;
+                border-radius: 4px;
             }
             .input-boolean {
                 padding: 12px;
@@ -57,9 +59,8 @@
             .label {
                 float:left;
                 margin-right:20px;
-                line-height: 5px" 
             }
-            .input-submit{
+            .input-submit {
                 background-color: #e85959;
                 color: white;
                 padding: 12px 20px;
@@ -93,6 +94,7 @@
                 display: inline-block;
                 width: 60px;
                 height: 34px;
+                top: -8px;
             }
 
             /* Hide default HTML checkbox */
@@ -114,7 +116,6 @@
                 -webkit-transition: .4s;
                 transition: .4s;
             }
-
             .slider:before {
                 position: absolute;
                 content: "";
@@ -126,15 +127,12 @@
                 -webkit-transition: .4s;
                 transition: .4s;
             }
-
             input:checked + .slider {
                 background-color: #2196F3;
             }
-
             input:focus + .slider {
                 box-shadow: 0 0 1px #2196F3;
             }
-
             input:checked + .slider:before {
                 -webkit-transform: translateX(26px);
                 -ms-transform: translateX(26px);
@@ -145,12 +143,30 @@
             .slider.round {
                 border-radius: 34px;
             }
-
             .slider.round:before {
                 border-radius: 50%;
             }
             .set-default {
                 margin-bottom: 10px;
+            }
+
+            /* Message notification */
+            .alert {
+                border-radius: 3px;
+                padding: 13px;
+            }
+            .alert .close-alert {
+                float: right;
+            }
+            .alert .close-alert:hover {
+                color: black;
+                cursor: pointer;
+            }
+            .alert-success {
+                border: 1px solid #a9d2a4;
+                background-color: #c6ecc4;
+                color: #2a6f22;
+                margin-bottom: 35px;
             }
         </style>
     </head>

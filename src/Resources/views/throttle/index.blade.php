@@ -8,7 +8,7 @@
         </h1>
 
         <div class="set-default">
-            <a href="{{ route('api.throttle.edit', $throttleDefaultId) }}">Set Default</a>
+            <a href="{{ route('config.throttle.edit', $throttleDefaultId) }}">Set Default</a>
         </div>
     </div>
 
@@ -30,7 +30,7 @@
                     <td>{{ $throttle['data']['max_attempts'] ?? '' }}</td>
                     <td>{{ $throttle['data']['decay_minutes'] ?? '' }}</td>
                     <td>
-                        <a href="{{ route('api.throttle.edit', $throttle['id']) }}" >Edit</a>
+                        <a href="{{ route('config.throttle.edit', $throttle['id']) }}" >Edit</a>
                     </td>
                 </tr>
             @endforeach
