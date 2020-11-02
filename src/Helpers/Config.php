@@ -27,7 +27,7 @@
     if (! function_exists('getDefaultValue')) {
         function getDefaultValue($code)
         {
-            $fields = config('ggconfig.fields');
+            $fields = config('config.system');
             $default = null;
 
             foreach ($fields as $field) {

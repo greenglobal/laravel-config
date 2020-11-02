@@ -10,7 +10,7 @@
 
     <div class="content-page">
 
-        <form method="POST" action="{{ route('api.throttle.update') }}">
+        <form method="POST" action="{{ route('config.throttle.update') }}">
 
             @csrf()
             <input type="hidden" id="id" name="id" value="{{ $id ?? '' }}">

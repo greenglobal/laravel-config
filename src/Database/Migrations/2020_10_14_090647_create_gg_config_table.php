@@ -12,15 +12,14 @@ class CreateGGConfigTable extends Migration
      */
     public function up()
     {
-        if (env('STORE_DB', 'database') == 'database') {
-            Schema::create('gg_config', function (Blueprint $table) {
-                $table->id();
-                $table->string('code')->unique();
-                $table->string('value');
-                $table->string('default')->nullable();
-                $table->timestamps();
-            });
-        }
+        Schema::create('gg_config', function (Blueprint $table) {
+            $table->id();
+            $table->string('code')->unique();
+            $table->string('value');
+            $table->string('type')->nullable();
+            $table->string('default')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

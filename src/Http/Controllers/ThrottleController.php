@@ -19,6 +19,10 @@ class ThrottleController extends Controller
     {
         $routeCollection = Route::getRoutes();
         $throttles = [];
+        $throttle_default = json_encode([
+            'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
+            'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
+        ]);
 
         foreach ($routeCollection as $route) {
             $actions = $route->getAction();
@@ -52,10 +56,9 @@ class ThrottleController extends Controller
                 } else {
                     $result = GGConfig::create([
                         'code' => $routeName,
-                        'value' => json_encode([
-                            'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
-                            'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
-                        ]),
+                        'value' => $throttle_default,
+                        'type' => 'throttle',
+                        'default' => $throttle_default,
                     ]);
 
                     if (! empty($result)) {
@@ -75,10 +78,9 @@ class ThrottleController extends Controller
         if (empty($throttleDefault)) {
             $throttleDefault = GGConfig::create([
                 'code' => 'throttle_default',
-                'value' => json_encode([
-                    'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
-                    'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
-                ]),
+                'value' => $throttle_default,
+                'type' => 'throttle',
+                'default' => $throttle_default,
             ]);
         }
 
@@ -110,7 +112,7 @@ class ThrottleController extends Controller
     public function update()
     {
         $validator = Validator::make(request()->all(), [
-            'id' => 'required|string|exists:laravel_config,id',
+            'id' => 'required|string|exists:gg_config,id',
             'max_attempts' => 'required|string|max:255',
             'decay_minutes' => 'required|integer',
         ]);
@@ -170,6 +172,6 @@ class ThrottleController extends Controller
             }
         }
 
-        return redirect()->route('api.throttle.index');
+        return redirect()->route('config.throttle.index');
     }
 }
