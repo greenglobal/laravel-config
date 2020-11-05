@@ -13,7 +13,7 @@ class CreateGGConfigTable extends Migration
     public function up()
     {
         Schema::create('gg_config', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('code')->unique();
             $table->string('value');
             $table->string('type')->nullable();

@@ -51,7 +51,7 @@
     if (! function_exists('getThrottle')) {
         function getThrottle($routeName)
         {
-            $throttle = $this->getConfigByCode($routeName);
+            $throttle = getConfigByCode($routeName);
 
             return ! empty($throttle) ? json_decode($throttle->value, true) : [];
         }

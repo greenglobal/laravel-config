@@ -2,7 +2,6 @@
 
 namespace GGPHP\Config\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use GGPHP\Config\Models\GGConfig;
 use Illuminate\Support\Facades\Validator;
 use Route;
@@ -27,7 +26,7 @@ class ThrottleController extends Controller
         foreach ($routeCollection as $route) {
             $actions = $route->getAction();
 
-            if (! empty($actions['middleware']) &&
+            if (! empty($actions['middleware']) && is_array($actions['middleware']) &&
                 ! empty(array_filter($actions['middleware'], function($value) {
                     return (strpos($value, 'throttle:') !== false) ?? false;
                 }))
@@ -141,7 +140,7 @@ class ThrottleController extends Controller
             foreach ($routeCollection as $route) {
                 $actions = $route->getAction();
 
-                if (! empty($actions['middleware']) &&
+                if (! empty($actions['middleware']) && is_array($actions['middleware']) &&
                     ! empty(array_filter($actions['middleware'], function($value) {
                         return (strpos($value, 'throttle:') !== false) ?? false;
                     }))
