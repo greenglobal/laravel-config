@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use GGPHP\Config\Models\GGConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use GGPHP\Config\Services\FirebaseService;
 
 class ConfigController extends Controller
 {
     /**
      * Show the view for the configuration fields
-     *
      * @return \Illuminate\View\View
      */
     public function edit()
@@ -21,14 +21,12 @@ class ConfigController extends Controller
 
     /**
      * Update the configuration fields.
-     *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
      */
     public function update(Request $request)
     {
         $data = $request->except(['_method', '_token']);
-
         $configs = config('config.system');
         $rules = $booleans = $types = [];
 
@@ -58,18 +56,31 @@ class ConfigController extends Controller
                 $data[$value] = false;
 
         foreach ($data as $code => $value) {
-            $configInfo = getConfigByCode($code);
+            $attributes = [
+                'code' => $code,
+                'value' => $value ?? '',
+                'type' => $types[$code] ?? '',
+                'default' => getDefaultValueByCode($code) ?? ''
+            ];
 
-            if ($configInfo) {
-                $configInfo->value = $value ?? '';
-                $configInfo->save();
-            } else {
-                GGConfig::create([
-                    'code' => $code,
-                    'value' => $value ?? '',
-                    'type' => $types[$code] ?? '',
-                    'default' => $value ?? '',
-                ]);
+            if (env('STORE_DB', 'database') == 'database') {
+                $configInfo = getConfigByCode($code);
+
+                if ($configInfo) {
+                    $configInfo->value = $value ?? '';
+                    $configInfo->save();
+                } else {
+                    GGConfig::create($attributes);
+                }
+            } elseif (env('STORE_DB') == 'firebase') {
+                $firebaseService = new FirebaseService;
+                $configInfo = $firebaseService->getDataByCode($code);
+
+                if (empty($configInfo)) {
+                    $firebaseService->addData(GGConfig::FIELD_REFERENCE, $attributes);
+                } elseif ($key = getKeyByCode($code)) {
+                    $firebaseService->setData(GGConfig::FIELD_REFERENCE . '/' . $key, $attributes);
+                }
             }
         }
 
@@ -80,15 +91,31 @@ class ConfigController extends Controller
 
     /**
      * Reset the fields to default
-     *
      * @return \Illuminate\Http\Response
      */
     public function reset()
     {
-        $configs = GGConfig::get(['code', 'type', 'default']);
+        $configs = [];
 
-        if (empty($configs))
-            return response()->json(['data' => null], 400);
+        if (env('STORE_DB', 'database') == 'database') {
+            $configs = GGConfig::get(['code', 'type', 'default']);
+
+            if (empty($configs))
+                return response()->json(['data' => null], 400);
+
+        } elseif (env('STORE_DB') == 'firebase') {
+            $firebaseService = new FirebaseService;
+            $reference = $firebaseService->retrieveData(GGConfig::FIELD_REFERENCE);
+            $data = $reference->getValue() ?? [];
+
+            foreach($data as $value) {
+                $configs[] = [
+                    'code' => $value['code'],
+                    'type' => $value['type'],
+                    'default' => $value['default']
+                ];
+            }
+        }
 
         return response()->json(['data' => $configs], 200);
     }

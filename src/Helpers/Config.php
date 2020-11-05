@@ -1,10 +1,10 @@
 <?php
 
     use GGPHP\Config\Models\GGConfig;
+    use GGPHP\Config\Services\FirebaseService;
 
     /**
      * This function use to get config info by code
-     *
      * @param  code field  $code
      * @return object
      */
@@ -24,17 +24,21 @@
      * @param  code field  $code
      * @return object
      */
-    if (! function_exists('getDefaultValue')) {
-        function getDefaultValue($code)
+    if (! function_exists('getDefaultValueByCode')) {
+        function getDefaultValueByCode($code)
         {
-            $fields = config('config.system');
+            $configs = config('config.system');
             $default = null;
 
-            foreach ($fields as $field) {
-                if ($field['code'] === $code && isset($field['default'])) {
-                    $default = $field['default'];
+            foreach ($configs as $config) {
+                if ($config['key'] == 'configuration.system.fields') {
+                    foreach ($config['fields'] as $field) {
+                        if ($field['code'] === $code && isset($field['default'])) {
+                            $default = $field['default'];
 
-                    break;
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -56,4 +60,24 @@
             return ! empty($throttle) ? json_decode($throttle->value, true) : [];
         }
     }
-?>
+
+    /**
+     * This function use to get key data of firebase info by code
+     * @param  code field  $code
+     * @return string
+     */
+    if (! function_exists('getKeyByCode')) {
+        function getKeyByCode($code)
+        {
+            $firebaseService = new FirebaseService;
+            $reference = $firebaseService->retrieveData(GGConfig::FIELD_REFERENCE);
+            $data = $reference->getValue() ?? [];
+
+            foreach($data as $key => $value) {
+                if ($value['code'] == $code)
+                   return $key;
+            }
+
+            return false;
+        }
+    }

@@ -6,8 +6,8 @@ Route::group(['middleware' => ['web']], function () {
         Route::prefix('configuration')->group(function () {
             // Field Routes
             Route::prefix('field')->group(function () {
-                Route::get('edit', 'ConfigController@edit')->name('config.field.edit');
                 Route::patch('updates', 'ConfigController@update')->name('config.field.update');
+                Route::get('edit', 'ConfigController@edit')->name('config.field.edit');
                 Route::get('reset', 'ConfigController@reset')->name('config.field.reset');
             });
 
