@@ -2,7 +2,6 @@
 
 namespace GGPHP\Config\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use GGPHP\Config\Models\GGConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

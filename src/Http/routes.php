@@ -18,3 +18,28 @@ Route::group(['middleware' => ['web']], function () {
         });
     });
 });
+
+// Routes for testing
+if (app('env') == 'testing') {
+    Route::group(['prefix' => 'api', 'middleware' => ['throttle']], function () {
+        Route::get('throttle', function () {
+            return ['message' => 'Call api successfully!'];
+        })->name('api.throttle.get');
+
+        Route::post('throttle', function () {
+            return ['message' => 'Call api successfully!'];
+        })->name('api.throttle.post');
+
+        Route::put('throttle', function () {
+            return ['message' => 'Call api successfully!'];
+        })->name('api.throttle.put');
+
+        Route::patch('throttle/{id}', function () {
+            return ['message' => 'Call api successfully!'];
+        })->name('api.throttle.patch');
+
+        Route::delete('throttle/{id}', function () {
+            return ['message' => 'Call api successfully!'];
+        })->name('api.throttle.delete');
+    });
+}
