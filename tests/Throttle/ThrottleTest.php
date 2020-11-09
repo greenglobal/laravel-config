@@ -14,7 +14,7 @@ class ThrottleTest extends TestCase
      */
     public function testThrottleCanView()
     {
-        $response = $this->get('/configuration/throttles');
+        $response = $this->get('configuration/throttles');
 
         $response->assertStatus(200)->assertSee('API Throttles');
     }
@@ -26,33 +26,33 @@ class ThrottleTest extends TestCase
      */
     public function testThrottleCanEdit()
     {
-        $viewResponse = $this->get('/configuration/throttles');
+        $viewResponse = $this->get('configuration/throttles');
         $viewResponse->assertStatus(200)->assertSee('API Throttles');
 
         $throttleResult = GGConfig::where('code', 'api.throttle.get')->first();
 
         $this->assertNotEmpty($throttleResult, 'Throttle is empty');
 
-        $editResponse = $this->get('/configuration/throttle/edit/' . $throttleResult->id);
+        $editResponse = $this->get('configuration/throttle/edit/' . $throttleResult->id);
 
         // Check view for edit throttle
         $editResponse->assertStatus(200)->assertSee('Edit throttle');
 
         // Set max attempts and decay minutes for api.throttle.get
-        $max_attempts = 2;
-        $decay_minutes = 1;
+        $maxAttempts = 2;
+        $decayMinutes = 1;
         $throttleConfig = [
             'id' => (string) $throttleResult->id,
-            'max_attempts' => (string) $max_attempts,
-            'decay_minutes' => 1,
+            'max_attempts' => (string) $maxAttempts,
+            'decay_minutes' => $decayMinutes,
         ];
 
-        $updateResponse = $this->post('/configuration/throttle/update', $throttleConfig);
+        $updateResponse = $this->post('configuration/throttle/update', $throttleConfig);
 
         // Check successful updating
         $updateResponse->assertStatus(302);
 
-        for ($i = 1; $i <= $max_attempts; $i++) {
+        for ($i = 1; $i <= $maxAttempts; $i++) {
             $apiResponse = $this->get('api/throttle');
 
             $apiResponse->assertStatus(200);

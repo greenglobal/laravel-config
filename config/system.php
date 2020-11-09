@@ -24,6 +24,7 @@ return [
                 'type' => 'number',
                 'name' => 'name 3',
                 'title' => 'title 3',
+                'default' => 1,
                 'validation' => 'numeric'
             ],
             [
