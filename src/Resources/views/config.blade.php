@@ -22,8 +22,10 @@
 
                 @foreach ($data['fields'] as $field)
                     @php
-                        $config = getConfigByCode($field['code']);
-                        $value = $config ? $config->value : null;
+                        $config = env('STORE_DB', 'database') == 'database'
+                            ? getConfigByCode($field['code'])
+                            : app('GGPHP\Config\Services\FirebaseService')->getDataByCode($field['code']);
+                        $value = $config['value'] ?? null;
                     @endphp
 
                     <div class="row">
