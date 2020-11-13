@@ -19,7 +19,7 @@ return [
                 'title' => 'title 2',
                 'default' => 'default 2',
                 'validation' => 'required|min:1',
-                'access' => 'admin',
+                'access' => 'user',
             ],
             [
                 'code' => 'code-3',
