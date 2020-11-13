@@ -18,7 +18,6 @@ class ConfigServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'ggphp-config');
         $this->loadRoutesFrom(__DIR__ . '/../Http/routes.php');
-        $this->composeView();
     }
 
     /**
@@ -31,24 +30,5 @@ class ConfigServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             dirname(__DIR__) . '/../config/system.php', 'config.system'
         );
-    }
-
-    /**
-     * Bind the the data to the views
-     *
-     * @return void
-     */
-    protected function composeView()
-    {
-        view()->composer(['ggphp-config::config'], function ($view) {
-            $configs = config('config.system');
-            $data = array_filter($configs, function($value) {
-                if (! empty($value['key'])) {
-                    return $value['key'] == 'configuration.system.fields';
-                }
-            });
-
-            $view->with(['data' => array_pop($data)]);
-        });
     }
 }

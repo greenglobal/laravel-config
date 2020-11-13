@@ -15,7 +15,18 @@ class ConfigController extends Controller
      */
     public function edit()
     {
-        return view('ggphp-config::config');
+        $configs = config('config.system');
+        $data = array_filter($configs, function($value) {
+            if (! empty($value['key']))
+                return $value['key'] == 'configuration.system.fields';
+        });
+
+        // Get user role, exp for developer: admin
+        $userRole = 'admin';
+
+        return view('ggphp-config::config')->with(
+            ['data' => array_pop($data), 'userRole' => $userRole]
+        );
     }
 
     /**
