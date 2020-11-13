@@ -26,48 +26,51 @@
                         $value = $config ? $config->value : null;
                     @endphp
 
-                    <div class="row">
+                    @if (isset($field['access']) && $field['access'] == $userRole)
+                        <div class="row">
 
-                        @if ($field['type'] == 'text' || $field['type'] == 'number')
-                            <label for="{{ $field['code'] }}">{{ $field['title'] ?? '' }}</label>
-                            <input class="input-text" type="{{ $field['type'] }}" name="{{ $field['code'] }}" id="{{ $field['code'] }}"
-                                value="{{ $value ? $value : (isset($field['default']) ? $field['default'] : '') }}"
-                            />
-                            <p class="error">{{ $errors->first($field['code']) }}</p>
-                        @elseif ($field['type'] == 'select')
-                            <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
-                            <select name="{{ $field['code'] }}" id="{{ $field['code'] }}" class="select">
-                                <option value=""></option>
-
-                                @if (isset($field['options']))
-                                    @php
-                                        $selected = $value ? $value : (isset($field['default']) ? $field['default'] : '')
-                                    @endphp
-
-                                    @foreach ($field['options'] as $option)
-                                        <option value="{{ $option['value'] }}" {{ $option['value'] == $selected ? 'selected' : '' }}>
-                                            {{ $option['title'] }}
-                                        </option>
-                                    @endforeach
-                                @endif
-
-                            </select>
-                        @elseif ($field['type'] == 'boolean')
-                            @php
-                                $checked = $value ? $value : (isset($field['default']) ? $field['default'] : '');
-                            @endphp
-
-                            <label class="label">{{ $field['title'] }}</label>
-                            <label class="switch">
-                                <input type="checkbox" name="{{ $field['code'] }}" id="{{ $field['code'] }}"
-                                    {{ (isset($field['value']) && $field['value'] == $checked) ? 'checked' : ''}}
-                                    value="{{ isset($field['value']) ? $field['value'] : '' }}"
+                            @if ($field['type'] == 'text' || $field['type'] == 'number')
+                                <label for="{{ $field['code'] }}">{{ $field['title'] ?? '' }}</label>
+                                <input class="input-text" type="{{ $field['type'] }}" name="{{ $field['code'] }}" id="{{ $field['code'] }}"
+                                    value="{{ $value ? $value : (isset($field['default']) ? $field['default'] : '') }}"
                                 />
-                                <span class="slider round"></span>
-                            </label>
-                        @endif
+                                <p class="error">{{ $errors->first($field['code']) }}</p>
+                            @elseif ($field['type'] == 'select')
+                                <label for="{{ $field['code'] }}">{{ $field['title'] }}</label>
+                                <select name="{{ $field['code'] }}" id="{{ $field['code'] }}" class="select">
+                                    <option value=""></option>
 
-                    </div>
+                                    @if (isset($field['options']))
+                                        @php
+                                            $selected = $value ? $value : (isset($field['default']) ? $field['default'] : '')
+                                        @endphp
+
+                                        @foreach ($field['options'] as $option)
+                                            <option value="{{ $option['value'] }}" {{ $option['value'] == $selected ? 'selected' : '' }}>
+                                                {{ $option['title'] }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+
+                                </select>
+                            @elseif ($field['type'] == 'boolean')
+                                @php
+                                    $checked = $value ? $value : (isset($field['default']) ? $field['default'] : '');
+                                @endphp
+
+                                <label class="label">{{ $field['title'] }}</label>
+                                <label class="switch">
+                                    <input type="checkbox" name="{{ $field['code'] }}" id="{{ $field['code'] }}"
+                                        {{ (isset($field['value']) && $field['value'] == $checked) ? 'checked' : ''}}
+                                        value="{{ isset($field['value']) ? $field['value'] : '' }}"
+                                    />
+                                    <span class="slider round"></span>
+                                </label>
+                            @endif
+
+                        </div>
+                    @endif
+
                 @endforeach
 
                 <div class="row">
