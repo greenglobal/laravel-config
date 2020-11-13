@@ -10,7 +10,7 @@ return [
                 'type' => 'text',
                 'name' => 'name 1',
                 'title' => 'title 1',
-                'access' => 'admin',
+                'access' => ['admin'],
             ],
             [
                 'code' => 'code-2',
@@ -19,7 +19,7 @@ return [
                 'title' => 'title 2',
                 'default' => 'default 2',
                 'validation' => 'required|min:1',
-                'access' => 'user',
+                'access' => ['user'],
             ],
             [
                 'code' => 'code-3',
@@ -28,7 +28,7 @@ return [
                 'title' => 'title 3',
                 'default' => 1,
                 'validation' => 'numeric',
-                'access' => 'admin',
+                'access' => ['admin'],
             ],
             [
                 'code' => 'code-4',
@@ -36,7 +36,7 @@ return [
                 'name' => 'name 4',
                 'title' => 'title 4',
                 'value' => true,
-                'access' => 'admin',
+                'access' => ['admin'],
             ],
             [
                 'code' => 'code-5',
@@ -53,7 +53,7 @@ return [
                         'value' => 2
                     ]
                 ],
-                'access' => 'admin',
+                'access' => ['admin'],
             ],
         ]
     ],
