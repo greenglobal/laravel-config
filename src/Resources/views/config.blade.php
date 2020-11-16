@@ -10,7 +10,7 @@
 
     <div class="content-page">
 
-        @if(Session::has('message'))
+        @if (Session::has('message'))
             <p class="alert alert-success">{{ Session::get('message') }}<span class="close-alert" onclick="this.parentElement.style.display='none';">x</span></p>
         @endif
 
@@ -28,7 +28,7 @@
                         $value = $config['value'] ?? null;
                     @endphp
 
-                    @if (isset($field['access']) && $field['access'] == $userRole)
+                    @if (isset($field['access']) && in_array($userRole, $field['access']))
                         <div class="row">
 
                             @if ($field['type'] == 'text' || $field['type'] == 'number')
