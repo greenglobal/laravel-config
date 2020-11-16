@@ -40,10 +40,16 @@ class ConfigController extends Controller
         $configs = config('config.system');
         $rules = $booleans = $types = [];
 
+        // Get user role, exp for developer: admin
+        $userRole = 'admin';
+
         // Get validation from config file
         foreach ($configs as $config) {
             if ($config['key'] == 'configuration.system.fields') {
                 foreach ($config['fields'] as $field) {
+                    if (! isset($field['access']) || ! in_array($userRole, $field['access']))
+                        continue;
+
                     if (isset($field['validation']))
                         $rules[$field['code']] = $field['validation'];
 
