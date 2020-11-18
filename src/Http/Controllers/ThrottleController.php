@@ -26,12 +26,13 @@ class ThrottleController extends Controller
         foreach ($routeCollection as $route) {
             $actions = $route->getAction();
 
-            if (! empty($actions['middleware']) && is_array($actions['middleware']) &&
-                ! empty(array_filter($actions['middleware'], function($value) {
-                    return (strpos($value, 'throttle:') !== false) ?? false;
-                }))
-            )
+            $isThrottleRoute = array_filter($actions['middleware'], function ($value) {
+                return (strpos($value, 'throttle:') !== false) ?? false;
+            });
+
+            if (! empty($actions['middleware']) && is_array($actions['middleware']) && ! empty($isThrottleRoute)) {
                 continue;
+            }
 
             if (! empty($actions['prefix']) && $actions['prefix'] == 'api') {
                 $routeName = $route->getName();
@@ -116,8 +117,9 @@ class ThrottleController extends Controller
             'decay_minutes' => 'required|integer',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return redirect()->back()->with('errors', $validator->errors());
+        }
 
         $data = request()->only(['id', 'max_attempts', 'decay_minutes']);
 
@@ -140,12 +142,13 @@ class ThrottleController extends Controller
             foreach ($routeCollection as $route) {
                 $actions = $route->getAction();
 
-                if (! empty($actions['middleware']) && is_array($actions['middleware']) &&
-                    ! empty(array_filter($actions['middleware'], function($value) {
-                        return (strpos($value, 'throttle:') !== false) ?? false;
-                    }))
-                )
+                $isThrottleRoute = array_filter($actions['middleware'], function ($value) {
+                    return (strpos($value, 'throttle:') !== false) ?? false;
+                });
+
+                if (! empty($actions['middleware']) && is_array($actions['middleware']) && ! empty($isThrottleRoute)) {
                     continue;
+                }
 
                 if (! empty($actions['prefix']) && $actions['prefix'] == 'api') {
                     $routeName = $route->getName();
@@ -161,8 +164,10 @@ class ThrottleController extends Controller
 
                     if (! empty($throttle) && ! empty($throttleDefault)) {
                         $throttle->value = json_encode([
-                            'max_attempts' => json_decode($throttleDefault->value, true)['max_attempts'] ?? GGConfig::MAX_ATTEMPTS_DEFAULT,
-                            'decay_minutes' => json_decode($throttleDefault->value, true)['decay_minutes'] ?? GGConfig::DECAY_MINUTES_DEFAULT,
+                            'max_attempts' => json_decode($throttleDefault->value, true)['max_attempts']
+                                ?? GGConfig::MAX_ATTEMPTS_DEFAULT,
+                            'decay_minutes' => json_decode($throttleDefault->value, true)['decay_minutes']
+                                ?? GGConfig::DECAY_MINUTES_DEFAULT,
                         ]);
 
                         $throttle->save();

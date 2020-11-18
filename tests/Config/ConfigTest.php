@@ -32,7 +32,8 @@ class ConfigTest extends TestCase
         foreach ($configs as $config) {
             if ($config['key'] == 'configuration.system.fields') {
                 foreach ($config['fields'] as $field) {
-                    $value = ! empty($field['default']) ? $field['default'] : (! empty($field['value']) ? $field['value'] : '');
+                    $value = ! empty($field['default'])
+                        ? $field['default'] : (! empty($field['value']) ? $field['value'] : '');
                     $data = array_merge($data, [$field['code'] => $value]);
                 }
             }

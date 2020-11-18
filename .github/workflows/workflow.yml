@@ -17,6 +17,10 @@ jobs:
     - name: Install package
       run: composer install
 
+    # Run test PSR-12 convention
+    - name: Run process linter
+      run: composer lint
+
     # Run test for package
     - name: Run phpunit
       run: vendor/bin/phpunit
