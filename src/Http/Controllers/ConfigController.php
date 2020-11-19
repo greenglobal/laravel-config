@@ -16,9 +16,10 @@ class ConfigController extends Controller
     public function edit()
     {
         $configs = config('config.system');
-        $data = array_filter($configs, function($value) {
-            if (! empty($value['key']))
+        $data = array_filter($configs, function ($value) {
+            if (! empty($value['key'])) {
                 return $value['key'] == 'configuration.system.fields';
+            }
         });
 
         // Get user role, exp for developer: admin
@@ -47,14 +48,17 @@ class ConfigController extends Controller
         foreach ($configs as $config) {
             if ($config['key'] == 'configuration.system.fields') {
                 foreach ($config['fields'] as $field) {
-                    if (! isset($field['access']) || ! in_array($userRole, $field['access']))
+                    if (! isset($field['access']) || ! in_array($userRole, $field['access'])) {
                         continue;
+                    }
 
-                    if (isset($field['validation']))
+                    if (isset($field['validation'])) {
                         $rules[$field['code']] = $field['validation'];
+                    }
 
-                    if (isset($field['type']) && $field['type'] == 'boolean')
+                    if (isset($field['type']) && $field['type'] == 'boolean') {
                         $booleans[] = $field['code'];
+                    }
 
                     $types[$field['code']] = $field['type'];
                 }
@@ -63,13 +67,16 @@ class ConfigController extends Controller
 
         $validator = Validator::make($data, $rules);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return view('ggphp-config::config')->with('errors', $validator->errors());
+        }
 
         // Default is false if boolean field empty
-        foreach ($booleans as $value)
-            if (! in_array($value, array_keys($data)))
+        foreach ($booleans as $value) {
+            if (! in_array($value, array_keys($data))) {
                 $data[$value] = false;
+            }
+        }
 
         foreach ($data as $code => $value) {
             $attributes = [
@@ -89,7 +96,7 @@ class ConfigController extends Controller
                     GGConfig::create($attributes);
                 }
             } elseif (env('STORE_DB') == 'firebase') {
-                $firebaseService = new FirebaseService;
+                $firebaseService = new FirebaseService();
                 $configInfo = $firebaseService->getDataByCode($code);
 
                 if (empty($configInfo)) {
@@ -102,7 +109,8 @@ class ConfigController extends Controller
 
         $request->session()->flash('message', 'The update was successful!');
 
-        return $request->path() == 'configuration/field/edit' ? view('ggphp-config::config') : redirect()->route('config.field.edit');
+        return $request->path() == 'configuration/field/edit'
+            ? view('ggphp-config::config') : redirect()->route('config.field.edit');
     }
 
     /**
@@ -116,15 +124,15 @@ class ConfigController extends Controller
         if (env('STORE_DB', 'database') == 'database') {
             $configs = GGConfig::get(['code', 'type', 'default']);
 
-            if (empty($configs))
+            if (empty($configs)) {
                 return response()->json(['data' => null], 400);
-
+            }
         } elseif (env('STORE_DB') == 'firebase') {
-            $firebaseService = new FirebaseService;
+            $firebaseService = new FirebaseService();
             $reference = $firebaseService->retrieveData(GGConfig::FIELD_REFERENCE);
             $data = $reference->getValue() ?? [];
 
-            foreach($data as $value) {
+            foreach ($data as $value) {
                 $configs[] = [
                     'code' => $value['code'],
                     'type' => $value['type'],

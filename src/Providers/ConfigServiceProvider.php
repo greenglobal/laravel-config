@@ -13,8 +13,9 @@ class ConfigServiceProvider extends ServiceProvider
     {
         include __DIR__ . '/../Helpers/Config.php';
 
-        if (env('STORE_DB', 'database') == 'database')
+        if (env('STORE_DB', 'database') == 'database') {
             $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        }
 
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'ggphp-config');
         $this->loadRoutesFrom(__DIR__ . '/../Http/routes.php');
@@ -27,8 +28,6 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(
-            dirname(__DIR__) . '/../config/system.php', 'config.system'
-        );
+        $this->mergeConfigFrom(dirname(__DIR__) . '/../config/system.php', 'config.system');
     }
 }

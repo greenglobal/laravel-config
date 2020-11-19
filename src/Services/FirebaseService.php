@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GGPHP\Config\Services;
 
 use GGPHP\Config\Models\GGConfig;
 
-class FirebaseService {
+class FirebaseService
+{
 
     protected $database;
 
@@ -25,11 +28,12 @@ class FirebaseService {
 
     /**
      * This function use to add data in firebase
+     *
      * @param string $reference
      * @param object $data
      * @return object
      */
-    public function addData($reference = null, $data)
+    public function addData($reference = null, $data = null)
     {
         $firebase = $this->retrieveData($reference);
 
@@ -42,7 +46,7 @@ class FirebaseService {
      * @param object $data
      * @return object
      */
-    public function setData($reference = null, $data)
+    public function setData($reference = null, $data = null)
     {
         $firebase = $this->retrieveData($reference);
 
@@ -60,9 +64,10 @@ class FirebaseService {
         $data = $reference->getValue() ?? [];
         $configs = [];
 
-        foreach($data as $value) {
-            if (isset($value['code']) && $value['code'] == $code)
+        foreach ($data as $value) {
+            if (isset($value['code']) && $value['code'] == $code) {
                 $configs = $value;
+            }
         }
 
         return $configs;
