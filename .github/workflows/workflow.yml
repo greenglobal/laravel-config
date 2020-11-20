@@ -23,4 +23,10 @@ jobs:
 
     # Run test for package
     - name: Run phpunit
-      run: vendor/bin/phpunit
+      run: vendor/bin/phpunit --coverage-clover coverage.xml
+
+    # Run performance test
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+          file: ./coverage.xml

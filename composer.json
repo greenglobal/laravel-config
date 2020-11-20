@@ -35,7 +35,7 @@
     },
     "scripts": {
         "lint": [
-            "vendor/bin/phpcs --ignore=*/src/Resources/views/*, --standard=PSR12 ./src ./config ./tests"
+            "vendor/bin/phpcs"
         ],
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
