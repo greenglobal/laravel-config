@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace GGPHP\Config\Services;
 
 use GGPHP\Config\Models\GGConfig;
+use GGPHP\Config\Models\GGFirebaseStorage;
 
 class FirebaseService
 {
 
     protected $database;
+    protected $storage;
 
     public function __construct()
     {
         $this->database = app('firebase.database');
+
+        $this->storage = app('firebase.storage');
     }
 
     /**
@@ -71,5 +75,54 @@ class FirebaseService
         }
 
         return $configs;
+    }
+
+    /**
+     * This function use to upload file to firebase
+     * @param  file field  $file
+     * @return object
+     */
+    public function uploadFile($file, $type, $reference, $expiresAt)
+    {
+        if (! empty($file)) {
+            $bucket = $this->storage->getBucket();
+            $name = $file->getClientOriginalName();
+            $destination = ($reference ?? '') . '/' . $name;
+
+            $result = $bucket->upload($file->get(), [
+                'resumable' => true,
+                'name' => $destination,
+                'uploadType' => $type,
+                'predefinedAcl' => 'publicRead'
+            ]);
+
+            $url = $result->signedUrl(new \DateTime($expiresAt)) ?? '';
+
+            return GGFirebaseStorage::create([
+                'name' => $name,
+                'url' => $url,
+                'destination' => $destination,
+                'type' => $type,
+                'expires' => $expiresAt ?? ''
+            ]);
+        }
+
+        return false;
+    }
+
+    /**
+     * This function use to get file from firebase by reference
+     * @param  file field  $file
+     * @return object
+     */
+    public function getFile($reference)
+    {
+        $file = GGFirebaseStorage::where('destination', $reference)->first();
+
+        if (! empty($file)) {
+           return $file;
+        }
+
+        return false;
     }
 }
