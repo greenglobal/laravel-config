@@ -12,6 +12,10 @@ This package is used for adding field options to system and configuring the api 
 3. Open `composer.json` of root project and add **"GGPHP\\Config\\": "packages/GGPHP/Config/src"**.
 4. Run the following command
 ```php
+composer update
+```
+
+```php
 composer dump-autoload
 ```
 
@@ -20,12 +24,17 @@ You are now able to add the new fields for system.
 ## Usage
 
 ### Use Firebase real time database
-- configure `STORE_DB=firebase` at `.env` file, default is `database`.
+- configure `STORE_DB=firebase` and `FIREBASE_CREDENTIALS={file-path}` at `.env` file, default is `database`.
+
+### Use Firebase storage to upload file
+- Use function `uploadFile($file, $type, $reference, $expiresAt)` in FirebaseService to upload file.
+- Use function `getFile($reference)` in FirebaseService to get url and file info.
 
 ### Add the configuration fields as need for system
 - Open `packages/GGPHP/Config/config/system.php` and add config data to `fields` (refer configuration at example data)
 - Go to `https://<your-site>/configuration/field/edit` , edit value then save.
 - Use `getConfigByCode` method to get field data.
+- Go to `ConfigController.php` file and override `$userRole` variable then add role to the fields `GGPHP\Config\config\system`.
 
 ### Dynamic api rate limiting
 - Add `throttle` to `middleware` at `prefix => api`.
@@ -45,7 +54,8 @@ Field options:
    'type' => 'text',
    'name' => 'Text field',
    'title' => 'title field',
-   'default' => 'default value'
+   'default' => 'default value',
+   'access' => ['admin'],
 ],
 [
    'code' => 'number-field',
@@ -53,7 +63,8 @@ Field options:
    'name' => 'Number field',
    'title' => 'title field',
    'default' => 'default value',
-   'validation' => 'required|min:1'
+   'validation' => 'required|min:1',
+   'access' => ['user'],
 ],
 [
    'code' => 'boolean-field',
@@ -61,7 +72,8 @@ Field options:
    'name' => 'Boolean field',
    'title' => 'title field',
    'default' => false,
-   'value' => true
+   'value' => true,
+   'access' => ['admin'],
 ],
 [
    'code' => 'selection field',
