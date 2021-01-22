@@ -120,7 +120,7 @@ class FirebaseService
         $file = GGFirebaseStorage::where('destination', $reference)->first();
 
         if (! empty($file)) {
-           return $file;
+            return $file;
         }
 
         return false;
