@@ -26,6 +26,10 @@ You are now able to add the new fields for system.
 ### Use Firebase real time database
 - configure `STORE_DB=firebase` and `FIREBASE_CREDENTIALS={file-path}` at `.env` file, default is `database`.
 
+### Use Firebase storage to upload file
+- Use function `uploadFile($file, $type, $reference, $expiresAt)` in FirebaseService to upload file.
+- Use function `getFile($reference)` in FirebaseService to get url and file info.
+
 ### Add the configuration fields as need for system
 - Open `packages/GGPHP/Config/config/system.php` and add config data to `fields` (refer configuration at example data)
 - Go to `https://<your-site>/configuration/field/edit` , edit value then save.
