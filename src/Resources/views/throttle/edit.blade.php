@@ -13,7 +13,7 @@
         <form method="POST" action="{{ route('config.throttle.update') }}">
 
             @csrf()
-            <input type="hidden" id="id" name="id" value="{{ $id ?? '' }}">
+            <input type="hidden" id="name" name="name" value="{{ $name ?? '' }}">
 
             <div class="row">
                 <div>
@@ -44,6 +44,8 @@
             </div>
 
             <div class="row">
+                <a href="{{ route('config.throttle.index') }}" class="back-btn">Back</a>
+
                 <input type="submit" value="Save" class="input-submit">
             </div>
 

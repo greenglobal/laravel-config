@@ -13,7 +13,7 @@ Route::group(['middleware' => ['web']], function () {
 
             // Throttle Routes
             Route::get('throttles', 'ThrottleController@index')->name('config.throttle.index');
-            Route::get('throttle/edit/{id}', 'ThrottleController@edit')->name('config.throttle.edit');
+            Route::get('throttle/edit/{name}', 'ThrottleController@edit')->name('config.throttle.edit');
             Route::post('throttle/update', 'ThrottleController@update')->name('config.throttle.update');
         });
     });

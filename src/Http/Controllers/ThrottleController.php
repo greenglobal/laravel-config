@@ -25,10 +25,10 @@ class ThrottleController extends Controller
 
         foreach ($routeCollection as $route) {
             $actions = $route->getAction();
-
-            $isThrottleRoute = array_filter($actions['middleware'], function ($value) {
-                return (strpos($value, 'throttle:') !== false) ?? false;
-            });
+            $isThrottleRoute = is_array($actions['middleware'])
+                ? array_filter($actions['middleware'], function ($value) {
+                    return (strpos($value, 'throttle:') !== false) ?? false;
+                }) : false;
 
             if (! empty($actions['middleware']) && is_array($actions['middleware']) && ! empty($isThrottleRoute)) {
                 continue;
@@ -45,31 +45,16 @@ class ThrottleController extends Controller
                 }
 
                 $routeInfo = getConfigByCode($routeName);
-
-                if (! empty($routeInfo)) {
-                    $throttles[] = [
-                        'id' => $routeInfo['id'],
-                        'name' => $routeName,
-                        'path' => $routePath,
-                        'data' => json_decode($routeInfo['value'], true)
-                    ];
-                } else {
-                    $result = GGConfig::create([
-                        'code' => $routeName,
-                        'value' => $throttle_default,
-                        'type' => 'throttle',
-                        'default' => $throttle_default,
-                    ]);
-
-                    if (! empty($result)) {
-                        $throttles[] = [
-                            'id' => $result['id'],
-                            'name' => $routeName,
-                            'path' => $routePath,
-                            'data' => json_decode($result['value'], true)
-                        ];
-                    }
-                }
+                $throttles[] = [
+                    'name' => $routeName,
+                    'path' => $routePath,
+                    'throttleDefault' => [
+                        'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
+                        'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
+                    ],
+                    'data' => ! empty($routeInfo)
+                        ? json_decode($routeInfo['value'], true) : []
+                ];
             }
         }
 
@@ -95,12 +80,20 @@ class ThrottleController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit($name)
     {
-        $route = GGConfig::findOrFail($id);
-        $throttle = json_decode($route['value'], true);
+        $route = GGConfig::where('code', $name)->first();
 
-        return view('ggphp-config::throttle.edit', compact('id', 'throttle'));
+        $throttle = [
+            'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
+            'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
+        ];
+
+        if (! empty($route)) {
+            $throttle = json_decode($route['value'], true);
+        }
+
+        return view('ggphp-config::throttle.edit', compact('name', 'throttle'));
     }
 
     /**
@@ -112,7 +105,6 @@ class ThrottleController extends Controller
     public function update()
     {
         $validator = Validator::make(request()->all(), [
-            'id' => 'required|string|exists:gg_config,id',
             'max_attempts' => 'required|string|max:255',
             'decay_minutes' => 'required|integer',
         ]);
@@ -121,9 +113,9 @@ class ThrottleController extends Controller
             return redirect()->back()->with('errors', $validator->errors());
         }
 
-        $data = request()->only(['id', 'max_attempts', 'decay_minutes']);
+        $data = request()->only(['name', 'max_attempts', 'decay_minutes']);
 
-        $throttle = GGConfig::findOrFail($data['id']);
+        $throttle = GGConfig::where('code', $data['name'])->first();
 
         if (! empty($throttle)) {
             $throttle->value = json_encode([
@@ -132,11 +124,24 @@ class ThrottleController extends Controller
             ]);
 
             $throttle->save();
+        } else {
+            $result = GGConfig::create([
+                'code' => $data['name'],
+                'value' => json_encode([
+                    'max_attempts' => $data['max_attempts'],
+                    'decay_minutes' => $data['decay_minutes'],
+                ]),
+                'type' => 'throttle',
+                'default' => json_encode([
+                    'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
+                    'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
+                ])
+            ]);
         }
 
         $throttleDefault = getConfigByCode('throttle_default');
 
-        if (! empty($throttleDefault) && $throttleDefault->id == $data['id']) {
+        if (! empty($throttleDefault) && $throttleDefault->code == $data['name']) {
             $routeCollection = Route::getRoutes();
 
             foreach ($routeCollection as $route) {
