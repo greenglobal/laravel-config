@@ -27,10 +27,10 @@
                 <tr>
                     <td>{{ $throttle['name'] ?? '' }}</td>
                     <td>{{ $throttle['path'] ?? '' }}</td>
-                    <td>{{ $throttle['data']['max_attempts'] ?? '' }}</td>
-                    <td>{{ $throttle['data']['decay_minutes'] ?? '' }}</td>
+                    <td>{{ $throttle['data']['max_attempts'] ?? $throttle['throttleDefault']['max_attempts'] }}</td>
+                    <td>{{ $throttle['data']['decay_minutes'] ?? $throttle['throttleDefault']['decay_minutes'] }}</td>
                     <td>
-                        <a href="{{ route('config.throttle.edit', $throttle['id']) }}" >Edit</a>
+                        <a href="{{ route('config.throttle.edit', $throttle['name']) }}" >Edit</a>
                     </td>
                 </tr>
             @endforeach

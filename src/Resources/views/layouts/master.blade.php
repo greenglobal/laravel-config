@@ -68,6 +68,16 @@
                 border-radius: 4px;
                 cursor: pointer;
             }
+            .back-btn {
+                background-color: #bbbaba;
+                color: white;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                text-decoration:none;
+                font-size: 13px;
+            }
             input[type=submit]:hover {
                 background-color: #af3838;
             }
