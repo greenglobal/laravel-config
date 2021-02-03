@@ -30,3 +30,7 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
           file: ./coverage.xml
+
+    # Run test
+    - name: Test
+      run: echo '${{ Staging.FIREBASE_CREDENTIALS }}'
