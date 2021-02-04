@@ -8,6 +8,9 @@ jobs:
     # Set the type of machine to run on
     runs-on: ubuntu-latest
 
+    environment:
+      - name: staging
+
     steps:
     # Checks out a copy of your repository on the ubuntu-latest machine
     - name: Checkout code
@@ -33,4 +36,4 @@ jobs:
 
     # Run test
     - name: Test
-      run: echo '${{ Staging.FIREBASE_CREDENTIALS }}'
+      run: echo '${{ secrets.TEST }}'
