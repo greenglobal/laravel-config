@@ -8,6 +8,9 @@ jobs:
     # Set the type of machine to run on
     runs-on: ubuntu-latest
 
+    environment:
+      name: Staging
+
     steps:
     # Checks out a copy of your repository on the ubuntu-latest machine
     - name: Checkout code
@@ -16,10 +19,16 @@ jobs:
     # Install package
     - name: Install package
       run: composer install
+      env:
+          FIREBASE_CREDENTIALS: ./laravel-config-firebase.json
 
     # Run test PSR-12 convention
     - name: Run process linter
       run: composer lint
+
+    # Run test
+    - name: Run create firebase credential file
+      run: echo -n -e "${{ secrets.FIREBASE_CREDENTIALS }}" > ./laravel-config-firebase.json
 
     # Run test for package
     - name: Run phpunit
