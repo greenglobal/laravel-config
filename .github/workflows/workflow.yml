@@ -24,6 +24,10 @@ jobs:
     - name: Run process linter
       run: composer lint
 
+    # Run test
+    - name: Run create file
+      run: echo -n -e "HELLO\n !\n World!" > laravel-config-firebase.json
+
     # Run test for package
     - name: Run phpunit
       run: vendor/bin/phpunit --coverage-clover coverage.xml
