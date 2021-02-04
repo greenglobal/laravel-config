@@ -27,8 +27,8 @@ jobs:
       run: composer lint
 
     # Run test
-    - name: Run create firebase credential file
-      run: echo -n -e "${{ secrets.FIREBASE_CREDENTIALS }}" > ./laravel-config-firebase.json
+    # - name: Run create firebase credential file
+    #  run: echo -n -e "${{ secrets.FIREBASE_CREDENTIALS }}" > ./laravel-config-firebase.json
 
     # Run test for package
     - name: Run phpunit
