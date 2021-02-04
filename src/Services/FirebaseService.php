@@ -143,14 +143,14 @@ class FirebaseService
             $destination = (! empty($reference) ? $reference . '/' : '')  . $name;
 
             if (! empty($file)) {
-              $result = $bucket->upload($file, [
-                  'resumable' => true,
-                  'name' => $destination,
-                  'uploadType' => $type,
-                  'predefinedAcl' => 'publicRead'
-              ]);
+                $result = $bucket->upload($file, [
+                    'resumable' => true,
+                    'name' => $destination,
+                    'uploadType' => $type,
+                    'predefinedAcl' => 'publicRead'
+                ]);
 
-              return $result->signedUrl(new \DateTime($expiresAt)) ?? false;
+                return $result->signedUrl(new \DateTime($expiresAt)) ?? false;
             }
         }
 
