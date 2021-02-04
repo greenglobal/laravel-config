@@ -21,24 +21,62 @@ composer dump-autoload
 
 You are now able to add the new fields for system.
 
-## Usage
+## Features and Usage
 
-### Use Firebase real time database
-- configure `STORE_DB=firebase` and `FIREBASE_CREDENTIALS={file-path}` at `.env` file, default is `database`.
+### Firebase
 
-### Use Firebase storage to upload file
-- Use function `uploadFile($file, $type, $reference, $expiresAt)` in FirebaseService to upload file.
-- Use function `getFile($reference)` in FirebaseService to get url and file info.
+#### Real time database
+- Configure `STORE_DB=firebase` and `FIREBASE_CREDENTIALS={file-path}` at `.env` file, default is `database`.
+- Go to https://<your-site>/configuration/field/edit, edit value and save, data will dispatch to real time database on firebase.
 
-### Add the configuration fields as need for system
+- Use `retrieveData($reference)` function in FirebaseService to get data by $reference.
+
+``` Example:
+$results = retrieveData('configuration/system/fields')
+```
+- Use `getDataByCode($code)` function in FirebaseService to get data by $code (code name)
+
+``` Example:
+$results = getDataByCode('firebase')
+```
+
+#### Storage
+
+- Use `uploadFile($file, $type, $reference, $expiresAt)` function in FirebaseService to upload file.
+
+``` Example:
+ $image = $request->file('image'); //image file from frontend
+ $type = image/png;
+ $reference = 'images';
+ $expiresAt = 'today';
+ $results = uploadFile($image, $type, $reference, $expiresAt)
+```
+
+- Use `getFile($reference)` function in FirebaseService to get url and file info.
+
+``` Example:
+ $reference = 'images';
+ $results = getFile($reference);
+```
+
+### Configuration fields
+
+#### Create field
 - Open `packages/GGPHP/Config/config/system.php` and add config data to `fields` (refer configuration at example data)
+- Go to `ConfigController.php` file and override `$userRole` variable (allow user can edit) then add role to the fields `GGPHP\Config\config\system`.
 - Go to `https://<your-site>/configuration/field/edit` , edit value then save.
+
+#### Get field
 - Use `getConfigByCode` method to get field data.
-- Go to `ConfigController.php` file and override `$userRole` variable then add role to the fields `GGPHP\Config\config\system`.
+
+``` Example:
+$results = getDataByCode('firebase')
+```
 
 ### Dynamic api rate limiting
 - Add `throttle` to `middleware` at `prefix => api`.
-- Go to `https://<your-site>/configuration/throttles`.
+- Go to `https://<your-site>/configuration/throttles` to view all apis in the system.
+- Click to `Edit` button to edit `Max Attempts` and `Decay Minutes`.
 
 ### Testing
 
