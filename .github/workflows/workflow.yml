@@ -44,6 +44,9 @@ jobs:
     - name: Test printing your secret (Remove this step in production)
       run: cat $HOME/secrets/laravel-config-firebase.json
 
+    - name: Decrypt large secret
+      run: echo $HOME
+
     # Run test for package
     - name: Run phpunit
       run: vendor/bin/phpunit --coverage-clover coverage.xml
