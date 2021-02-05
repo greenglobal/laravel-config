@@ -32,7 +32,7 @@ jobs:
 
     # Run test
     - name: Run gpg
-      run: gpg --symmetric --cipher-algo AES256 laravel-config-firebase.json
+      run: gpg --symmetric --cipher-algo AES256 ./laravel-config-firebase.json
 
     # Run test for package
     - name: Run phpunit
