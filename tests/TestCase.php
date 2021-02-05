@@ -4,6 +4,7 @@ namespace GGPHP\Config\Tests;
 
 use GGPHP\Config\Providers\ConfigServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Kreait\Laravel\Firebase\ServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
@@ -17,6 +18,9 @@ abstract class TestCase extends Orchestra
         $this->loadLaravelMigrations();
 
         $this->artisan('vendor:publish', ['--provider' => 'GGPHP\Config\ConfigServiceProvider']);
+        $this->artisan('vendor:publish', [
+          '--provider' => 'Kreait\Laravel\Firebase\ServiceProvider',
+          '--tag' => 'config']);
         $this->artisan('migrate', ['--database' => 'testing']);
 
         $this->beforeApplicationDestroyed(function () {
@@ -50,6 +54,7 @@ abstract class TestCase extends Orchestra
     {
         return [
             ConfigServiceProvider::class,
+            ServiceProvider::class
         ];
     }
 

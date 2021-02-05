@@ -125,4 +125,35 @@ class FirebaseService
 
         return false;
     }
+
+    /**
+     * This function use to upload file by path to firebase
+     * @param  path field  $filePath
+     * @param  name field  $name
+     * @param  type field  $type
+     * @param  reference field  $reference
+     * @param  expiresAt field  $expiresAt
+     * @return object
+     */
+    public function uploadFileByPath($filePath, $name, $type, $reference, $expiresAt)
+    {
+        if (! empty($filePath) && ! empty($name) && ! empty($expiresAt)) {
+            $bucket = $this->storage->getBucket();
+            $file = fopen($filePath, 'r');
+            $destination = (! empty($reference) ? $reference . '/' : '')  . $name;
+
+            if (! empty($file)) {
+                $result = $bucket->upload($file, [
+                    'resumable' => true,
+                    'name' => $destination,
+                    'uploadType' => $type,
+                    'predefinedAcl' => 'publicRead'
+                ]);
+
+                return $result->signedUrl(new \DateTime($expiresAt)) ?? false;
+            }
+        }
+
+        return false;
+    }
 }
