@@ -8,6 +8,9 @@ jobs:
     # Set the type of machine to run on
     runs-on: ubuntu-latest
 
+    environment:
+      name: Staging
+
     steps:
     # Checks out a copy of your repository on the ubuntu-latest machine
     - name: Checkout code
@@ -20,6 +23,12 @@ jobs:
     # Run test PSR-12 convention
     - name: Run process linter
       run: composer lint
+
+    # Run decrypt secret passphrase to create laravel-config-firebase.json file
+    - name: Decrypt secret passphrase
+      run: ./.github/scripts/decrypt_secret.sh
+      env:
+        SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
 
     # Run test for package
     - name: Run phpunit
