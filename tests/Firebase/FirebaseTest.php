@@ -11,7 +11,7 @@ class FirebaseTest extends TestCase
 {
 
     /**
-     * Check view throttle
+     * Check upload file to firebase storage
      *
      * @return void
      */
@@ -19,7 +19,23 @@ class FirebaseTest extends TestCase
     {
         $firebaseService = new FirebaseService;
         $filePath = __DIR__ . '/image-test.png';
-        $results = $firebaseService->uploadFileByPath($filePath, 'image-test', 'image/png', '', 'today');
+        $uploadFile = $firebaseService->uploadFileByPath($filePath, 'image-test', 'image/png', 'images', 'today');
+        $this->assertNotEmpty($uploadFile, 'File is empty');
+    }
+
+    /**
+     * Check get url of file on firebase storage
+     *
+     * @return void
+     */
+    public function testGetFileUrl()
+    {
+        $firebaseService = new FirebaseService;
+        $filePath = __DIR__ . '/image-test.png';
+        $results = $firebaseService->uploadFileByPath($filePath, 'image-test', 'image/png', 'images', 'today');
+        $this->assertNotEmpty($results, 'File is empty');
+
+        $results = $firebaseService->getFile('images/image-test');
         $this->assertNotEmpty($results, 'File is empty');
     }
 }
