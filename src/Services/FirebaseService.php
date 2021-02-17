@@ -87,7 +87,7 @@ class FirebaseService
         if (! empty($file)) {
             $bucket = $this->storage->getBucket();
             $name = $file->getClientOriginalName();
-            $destination = ($reference ?? '') . '/' . $name;
+            $destination = (! empty($reference) ? $reference . '/' : '')  . $name;
 
             $result = $bucket->upload($file->get(), [
                 'resumable' => true,
@@ -117,10 +117,10 @@ class FirebaseService
      */
     public function getFile($reference)
     {
-        $file = GGFirebaseStorage::where('destination', $reference)->first();
+        $results = GGFirebaseStorage::where('destination', $reference)->first();
 
-        if (! empty($file)) {
-            return $file;
+        if (! empty($results)) {
+            return $results;
         }
 
         return false;
@@ -139,18 +139,26 @@ class FirebaseService
     {
         if (! empty($filePath) && ! empty($name) && ! empty($expiresAt)) {
             $bucket = $this->storage->getBucket();
-            $file = fopen($filePath, 'r');
+            $fileContents = file_get_contents($filePath);
             $destination = (! empty($reference) ? $reference . '/' : '')  . $name;
 
-            if (! empty($file)) {
-                $result = $bucket->upload($file, [
+            if (! empty($fileContents)) {
+                $result = $bucket->upload($fileContents, [
                     'resumable' => true,
                     'name' => $destination,
                     'uploadType' => $type,
                     'predefinedAcl' => 'publicRead'
                 ]);
 
-                return $result->signedUrl(new \DateTime($expiresAt)) ?? false;
+                $url = $result->signedUrl(new \DateTime($expiresAt)) ?? '';
+
+                return GGFirebaseStorage::create([
+                    'name' => $name,
+                    'url' => $url,
+                    'destination' => $destination,
+                    'type' => $type,
+                    'expires' => $expiresAt ?? ''
+                ]);
             }
         }
 
