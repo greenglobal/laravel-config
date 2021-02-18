@@ -19,6 +19,16 @@ Route::group(['middleware' => ['web']], function () {
     });
 });
 
+Route::group(['prefix' => 'api', 'middleware' => ['throttle']], function () {
+    Route::group(['namespace' => 'GGPHP\Config\Http\Controllers\API'], function () {
+        Route::get('configuration/fields', 'ConfigController@index')->name('api.field.index');
+        Route::get('configuration/fields/{id}', 'ConfigController@get')->name('api.field.get');
+        Route::post('configuration/fields', 'ConfigController@create')->name('api.field.create');
+        Route::patch('configuration/fields', 'ConfigController@update')->name('api.field.update');
+        Route::delete('configuration/fields/{id}', 'ConfigController@delete')->name('api.field.delete');
+    });
+});
+
 // Routes for testing
 if (app('env') == 'testing') {
     Route::group(['prefix' => 'api', 'middleware' => ['throttle']], function () {
