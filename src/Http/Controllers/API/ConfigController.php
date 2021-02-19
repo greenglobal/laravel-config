@@ -118,7 +118,7 @@ class ConfigController extends Controller
 
         return response()->json([
             'message' => 'Your field has been updated successfully.'
-        ], 202);
+        ], 200);
     }
 
     /**
@@ -147,5 +147,36 @@ class ConfigController extends Controller
         return response()->json([
             'message' => 'Delete the field successfully.'
         ], 204);
+    }
+
+    /**
+     * Reset the fields to default
+     * @return \Illuminate\Http\Response
+     */
+    public function reset()
+    {
+        $configs = [];
+
+        if (env('STORE_DB', 'database') == 'database') {
+            $configs = GGConfig::get(['code', 'type', 'default']);
+
+            if (empty($configs)) {
+                return response()->json(['data' => null], 400);
+            }
+        } elseif (env('STORE_DB') == 'firebase') {
+            $firebaseService = new FirebaseService();
+            $reference = $firebaseService->retrieveData(GGConfig::FIELD_REFERENCE);
+            $data = $reference->getValue() ?? [];
+
+            foreach ($data as $value) {
+                $configs[] = [
+                    'code' => $value['code'],
+                    'type' => $value['type'],
+                    'default' => $value['default']
+                ];
+            }
+        }
+
+        return response()->json(['data' => $configs], 200);
     }
 }

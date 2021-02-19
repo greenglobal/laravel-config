@@ -43,16 +43,4 @@ class ConfigTest extends TestCase
 
         $response->assertStatus(count($data) == 0 ? 200 : 302);
     }
-
-    /**
-     * Check view for reset to default
-     *
-     * @return void
-     */
-    public function testConfigCanResetToDefault()
-    {
-        $response = $this->get('configuration/field/reset');
-
-        $response->assertStatus(200);
-    }
 }
