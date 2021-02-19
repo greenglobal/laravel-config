@@ -78,7 +78,34 @@ $results = getDataByCode('firebase')
 - Go to `https://<your-site>/configuration/throttles` to view all apis in the system.
 - Click to `Edit` button to edit `Max Attempts` and `Decay Minutes`.
 
-### Testing
+## API
+
+### Configuration fields
+
+#### Get all field
+- Use `GET` method | `https://<your-site>/api/configuration/fields`
+
+#### Get field by id
+- Use `GET` method | `https://<your-site>/api/configuration/fields/{id}`
+
+#### Update field
+- Use `PATCH` method | `https://<your-site>/api/configuration/fields/reset`
+
+``` Example param:
+{
+    "id" : 1,
+    "code": "test",
+    "value": {
+        "max_attempts": 60,
+        "decay_minutes": 1
+    },
+    "type": "text"
+}
+```
+#### Reset all field to default value
+- Use `GET` | `https://<your-site>/api/configuration/fields/reset`
+
+## Testing
 
 ``` bash
 composer test
