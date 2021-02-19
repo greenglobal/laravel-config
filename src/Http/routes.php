@@ -8,7 +8,6 @@ Route::group(['middleware' => ['web']], function () {
             Route::prefix('field')->group(function () {
                 Route::patch('updates', 'ConfigController@update')->name('config.field.update');
                 Route::get('edit', 'ConfigController@edit')->name('config.field.edit');
-                Route::get('reset', 'ConfigController@reset')->name('config.field.reset');
             });
 
             // Throttle Routes
@@ -21,6 +20,7 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['prefix' => 'api', 'middleware' => ['throttle']], function () {
     Route::group(['namespace' => 'GGPHP\Config\Http\Controllers\API'], function () {
+        Route::get('configuration/fields/reset', 'ConfigController@reset')->name('api.field.reset');
         Route::get('configuration/fields', 'ConfigController@index')->name('api.field.index');
         Route::get('configuration/fields/{id}', 'ConfigController@get')->name('api.field.get');
         Route::post('configuration/fields', 'ConfigController@create')->name('api.field.create');

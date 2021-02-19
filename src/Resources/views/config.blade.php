@@ -95,7 +95,7 @@
     function resetDefault() {
         $.ajax({
             type:'GET',
-            url:'/configuration/field/reset',
+            url:'/api/configuration/fields/reset',
             success:function(response) {
                 response.data.forEach(value => {
                     if (value.type == 'boolean') {
