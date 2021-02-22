@@ -105,6 +105,28 @@ $results = getDataByCode('firebase')
 #### Reset all field to default value
 - Use `GET` | `https://<your-site>/api/configuration/fields/reset`
 
+### Throttles route
+
+#### Get all throttles
+- Use `GET` method | `https://<your-site>/api/configuration/throttles`
+
+#### Get throttle data by name
+- Use `GET` method | `https://<your-site>/api/configuration/throttles/{name}`
+
+#### Reset all throttles value to default
+- Use `GET` method | `https://<your-site>/api/configuration/throttles/reset`
+
+#### Update value for throttle
+- Use `POST` method | `https://<your-site>/api/configuration/throttles`
+
+``` Example param:
+{
+    "name": "Route name",
+    "max_attempts": 30,
+    "decay_minutes": 1
+}
+```
+
 ## Testing
 
 ``` bash
