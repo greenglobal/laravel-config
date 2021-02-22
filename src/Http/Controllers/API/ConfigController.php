@@ -11,7 +11,6 @@ use Illuminate\Http\Response;
 
 class ConfigController extends Controller
 {
-
     /**
      * Get all data configure
      *

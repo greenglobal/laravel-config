@@ -8,7 +8,7 @@
         </h1>
 
         <div class="set-default">
-            <a href="{{ route('config.throttle.edit', $throttleDefaultId) }}">Set Default</a>
+            <a href="{{ route('config.throttle.reset') }}">Set Default</a>
         </div>
     </div>
 
