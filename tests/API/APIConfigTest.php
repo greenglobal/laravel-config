@@ -6,7 +6,6 @@ use GGPHP\Config\Tests\TestCase;
 
 class APIConfigTest extends TestCase
 {
-
     /**
      * Check the fields are able to update value
      *

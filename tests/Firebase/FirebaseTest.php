@@ -9,7 +9,6 @@ use Kreait\Firebase\ServiceAccount;
 
 class FirebaseTest extends TestCase
 {
-
     /**
      * Check upload file to firebase storage
      *

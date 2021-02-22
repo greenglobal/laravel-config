@@ -1,18 +1,18 @@
 <?php
 
-namespace GGPHP\Config\Http\Controllers;
+namespace GGPHP\Config\Http\Controllers\API;
 
 use GGPHP\Config\Models\GGConfig;
 use Illuminate\Support\Facades\Validator;
+use GGPHP\Config\Http\Controllers\Controller;
 use Route;
 
 class ThrottleController extends Controller
 {
     /**
-     * Show the view for the specified resource.
+     * Get all resource.
      *
-     * @param  int  $orderId
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -69,48 +69,94 @@ class ThrottleController extends Controller
             ]);
         }
 
-        $throttleDefaultId = $throttleDefault->id ?? '';
-
-        return view('ggphp-config::throttle.index', compact('throttles', 'throttleDefaultId'));
+        return response()->json([
+            'data' => $throttles ?? [],
+            'message' => 'Get the throttles successfully.'
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Get the specified resource by name
      *
-     * @param  int  $id
-     * @return \Illuminate\View\View
+     * @param  string  $name
+     * @return \Illuminate\Http\Response
      */
-    public function edit($name)
+    public function get($name)
     {
         $route = GGConfig::where('code', $name)->first();
 
-        $throttle = [
-            'max_attempts' => GGConfig::MAX_ATTEMPTS_DEFAULT,
-            'decay_minutes' => GGConfig::DECAY_MINUTES_DEFAULT,
-        ];
+        if (empty($route)) {
+            $routeCollection = Route::getRoutes();
 
-        if (! empty($route)) {
-            $throttle = json_decode($route['value'], true);
+            foreach ($routeCollection as $route) {
+                $actions = $route->getAction();
+                $isThrottleRoute = is_array($actions['middleware'])
+                    ? array_filter($actions['middleware'], function ($value) {
+                        return (strpos($value, 'throttle:') !== false) ?? false;
+                    }) : false;
+
+                if (! empty($actions['middleware']) && is_array($actions['middleware']) && ! empty($isThrottleRoute)) {
+                    continue;
+                }
+
+                if (! empty($actions['prefix']) && $actions['prefix'] == 'api') {
+                    $routeName = $route->getName();
+                    $routePath = $route->uri();
+
+                    if (empty($routeName)) {
+                        continue;
+                    }
+
+                    if ($routeName == $name) {
+                        return response()->json([
+                            'data' => [
+                                'name' => $routeName,
+                                'path' => route($routeName),
+                                'throttleDefault' => $throttle_default,
+                                'data' => []
+                            ],
+                            'message' => 'Get the throttle successfully.'
+                        ], 200);
+                    }
+                }
+            }
+        } else {
+            return response()->json([
+                'data' => [
+                    'name' => $name,
+                    'path' => route($name),
+                    'throttleDefault' => ! empty($route)
+                        ? json_decode($route['default'], true) : [],
+                    'data' => ! empty($route)
+                        ? json_decode($route['value'], true) : []
+                ],
+                'message' => 'Get the throttle successfully.'
+            ], 200);
         }
 
-        return view('ggphp-config::throttle.edit', compact('name', 'throttle'));
+        return response()->json([
+            'message' => 'Not Found the throttle in system.',
+        ], 404);
     }
 
     /**
      * Edit's the premade resource of Route.
      *
-     * @param  int  $id
-     * @return \Illuminate\View\View
+     * @param  string  $name
+     * @return \Illuminate\Http\Response
      */
     public function update()
     {
         $validator = Validator::make(request()->all(), [
-            'max_attempts' => 'required|string|max:255',
-            'decay_minutes' => 'required|integer',
+            'name' => 'string|required',
+            'max_attempts' => 'string|required|max:255',
+            'decay_minutes' => 'string|required',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->with('errors', $validator->errors());
+            return response()->json([
+                'message' => $validator->errors()
+            ], 400);
         }
 
         $data = request()->only(['name', 'max_attempts', 'decay_minutes']);
@@ -181,13 +227,15 @@ class ThrottleController extends Controller
             }
         }
 
-        return redirect()->route('config.throttle.index');
+        return response()->json([
+            'message' => 'Your field has been updated successfully.'
+        ], 200);
     }
 
     /**
      * Reset all throttle value to default
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
     public function reset()
     {
@@ -206,6 +254,8 @@ class ThrottleController extends Controller
             }
         }
 
-        return redirect()->route('config.throttle.index');
+        return response()->json([
+            'message' => 'Reseted successfully.'
+        ], 200);
     }
 }
